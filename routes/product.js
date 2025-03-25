@@ -1,19 +1,24 @@
 const express = require('express');
 const router = express.Router();
+const { AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } = ENVIRONMENT_VAR;
 const AWS = require('aws-sdk');
 AWS.config.update({
-  region: 'us-east-1'
+  region: 'us-east-1',
+  accessKeyId: process.env[AWS_ACCESS_KEY_ID],
+  secretAccessKey: process.env[AWS_SECRET_ACCESS_KEY],
 });
 const dynamodb = new AWS.DynamoDB.DocumentClient();
-const dynamodbTableName = 'product-inventory';
+const dynamodbTableName = 'TestTable';
 
 router.get('/', async (req, res) => {
   const params = {
     TableName: dynamodbTableName,
-    Key: {
-      'productId': req.query.productId
+    KeyConditionExpression: 'pk = :hkey and sk > :rkey',
+    ExpressionAttributeValues: {
+      ':hkey': req.body.pk,
+      ':rkey': req.body.sk
     }
-  }
+  };
   await dynamodb.get(params).promise().then(response => {
     res.json(response.Item);
   }, error => {
@@ -24,7 +29,11 @@ router.get('/', async (req, res) => {
 
 router.get('/all', async (req, res) => {
   const params = {
-    TableName: dynamodbTableName
+    TableName: dynamodbTableName,
+    KeyConditionExpression: 'pk = :hkey',
+    ExpressionAttributeValues: {
+    ':hkey': 'key'
+    }
   }
   try {
     const allProducts = await scanDynamoRecords(params, []);
@@ -60,7 +69,8 @@ router.patch('/', async (req, res) => {
   const params = {
     TableName: dynamodbTableName,
     Key: {
-      'productId': req.body.productId
+      'pk': req.body.pk,
+      'sk': req.body.sk,
     },
     UpdateExpression: `set ${req.body.updateKey} = :value`,
     ExpressionAttributeValues: {
@@ -85,7 +95,8 @@ router.delete('/', async (req, res) => {
   const params = {
     TableName: dynamodbTableName,
     Key: {
-      'productId': req.body.productId
+      'pk': req.body.pk,
+      'sk': req.body.sk,
     },
     ReturnValues: 'ALL_OLD'
   }
@@ -104,7 +115,7 @@ router.delete('/', async (req, res) => {
 
 async function scanDynamoRecords(scanParams, itemArray) {
   try {
-    const dynamoData = await dynamodb.scan(scanParams).promise();
+    const dynamoData = await dynamodb.query(scanParams).promise();
     itemArray = itemArray.concat(dynamoData.Items);
     if (dynamoData.LastEvaluatedKey) {
       scanParams.ExclusiveStartKey = dynamoData.LastEvaluatedKey;
