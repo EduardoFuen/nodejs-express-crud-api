@@ -27,6 +27,7 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/all', async (req, res) => {
+  console.log("entro")
   const params = {
     TableName: dynamodbTableName,
     KeyConditionExpression: 'pk = :hkey',
