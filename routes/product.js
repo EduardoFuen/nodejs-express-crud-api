@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const { AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } = ENVIRONMENT_VAR;
 const AWS = require('aws-sdk');
 AWS.config.update({
   region: 'us-east-1',
