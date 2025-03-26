@@ -46,7 +46,8 @@ router.get('/all', async (req, res) => {
   }
 })
 
-router.put('/', async (req, res) => {
+router.post('/', async (req, res) => {
+  console.log(req.body)
     let entrada = req.body
     entrada.pk = 'warehouse'
   const params = {
