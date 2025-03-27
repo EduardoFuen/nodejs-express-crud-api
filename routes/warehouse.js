@@ -4,10 +4,10 @@ const AWS = require('aws-sdk');
 require("dotenv").config();
 AWS.config.update({
   region: 'us-east-1',
-  accessKeyId: process.env[AWS_ACCESS_KEY_ID],
-  secretAccessKey: process.env[AWS_SECRET_ACCESS_KEY],
+  accessKeyId: process.env['AWS_ACCESS_KEY_ID'],
+  secretAccessKey: process.env['AWS_SECRET_ACCESS_KEY'],
 });
-console.log(process.env[AWS_ACCESS_KEY_ID])
+console.log(process.env['AWS_ACCESS_KEY_ID'])
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const dynamodbTableName = 'TestTable';
 
