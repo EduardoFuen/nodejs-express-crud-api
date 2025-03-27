@@ -51,7 +51,8 @@ router.get('/all', async (req, res) => {
 router.post('/', async (req, res) => {
   console.log(req.body)
     let entrada = req.body
-    entrada.pk = 'warehouse'
+    entrada.pk = 'dragua'
+    entrada.sk = 'warehouse'+Date.now()
   const params = {
     TableName: dynamodbTableName,
     Item: entrada
