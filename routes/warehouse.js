@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
       ':hkey': 'dragua',
     }
   };
-  await dynamodb.get(params).promise().then(response => {
+  await dynamodb.query(params).promise().then(response => {
     res.json(response.Item);
   }, error => {
     console.error('Do your custom error handling here. I am just ganna log it out: ', error);
