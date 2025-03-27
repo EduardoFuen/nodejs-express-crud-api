@@ -12,14 +12,13 @@ const dynamodbTableName = 'TestTable';
 router.get('/', async (req, res) => {
   const params = {
     TableName: dynamodbTableName,
-    KeyConditionExpression: 'pk = :hkey and sk > :rkey',
+    KeyConditionExpression: 'pk = :hkey',
     ExpressionAttributeValues: {
-      ':hkey': req.body.pk,
-      ':rkey': req.body.sk
+      ':hkey': 'dragua#product'
     }
   };
-  await dynamodb.get(params).promise().then(response => {
-    res.json(response.Item);
+  await dynamodb.query(params).promise().then(response => {
+    res.json(response.Items);
   }, error => {
     console.error('Do your custom error handling here. I am just ganna log it out: ', error);
     res.status(500).send(error);
