@@ -14,9 +14,9 @@ const dynamodbTableName = 'TestTable';
 router.get('/', async (req, res) => {
   const params = {
     TableName: dynamodbTableName,
-    KeyConditionExpression: 'pk = :hkey and sk > :rkey',
+    KeyConditionExpression: 'pk = :hkey',
     ExpressionAttributeValues: {
-      ':hkey': 'warehouse',
+      ':hkey': 'dragua',
     }
   };
   await dynamodb.get(params).promise().then(response => {
@@ -51,8 +51,8 @@ router.get('/all', async (req, res) => {
 router.post('/', async (req, res) => {
   console.log(req.body)
     let entrada = req.body
-    entrada.pk = 'dragua'
-    entrada.sk = 'warehouse'+Date.now()
+    entrada.pk = 'dragua#warehouse'
+    entrada.sk = Date.now().toString()
   const params = {
     TableName: dynamodbTableName,
     Item: entrada
