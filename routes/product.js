@@ -48,6 +48,9 @@ router.get('/all', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
+  let entrada = req.body
+  entrada.pk = 'dragua#product'
+  entrada.sk = Date.now().toString()
   const params = {
     TableName: dynamodbTableName,
     Item: req.body
