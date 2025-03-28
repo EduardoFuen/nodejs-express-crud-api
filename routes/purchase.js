@@ -47,24 +47,35 @@ router.get('/all', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  let entrada = req.body
-  entrada.pk = 'dragua#purchase'
-  entrada.sk = Date.now().toString()
-  const params = {
-    TableName: dynamodbTableName,
-    Item: req.body
-  }
-  await dynamodb.put(params).promise().then(() => {
-    const body = {
-      Operation: 'SAVE',
-      Message: 'SUCCESS',
-      Item: req.body
-    }
-    res.status(200).send(body)
-  }, error => {
-    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
-    res.status(500).send(error);
-  })
+    const params2 = {
+        TableName: dynamodbTableName,
+        KeyConditionExpression: 'pk = :hkey and sk = :skey',
+        ExpressionAttributeValues: {
+          ':hkey': 'dragua#client',
+          ':skey': req.body.SupplierID,
+        }
+      };
+      await dynamodb.query(params2).promise().then(async response2 => {
+        let entrada = req.body
+        entrada.pk = 'dragua#purchase'
+        entrada.sk = Date.now().toString()
+        entrada.BusinessName = response2.Items[0].BusinessName
+        const params = {
+          TableName: dynamodbTableName,
+          Item: entrada
+        }
+        await dynamodb.put(params).promise().then(() => {
+          const body = {
+            Operation: 'SAVE',
+            Message: 'SUCCESS',
+            Item: req.body
+          }
+          res.status(200).send(body)
+        }, error => {
+          console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+          res.status(500).send(error);
+        })
+      })
 })
 
 router.patch('/', async (req, res) => {
