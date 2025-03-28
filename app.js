@@ -3,6 +3,7 @@ const cors = require('cors')
 const app = express();
 const port = process.env.PORT || 3050;
 
+const clientRouter = require('./routes/cliente');
 const productRouter = require('./routes/product');
 const warehouseRouter = require('./routes/warehouse');
 app.use(express.json({limit: '50mb'}));
@@ -12,6 +13,7 @@ app.use(
     origin: "*",
   }),
 );
+app.use('/supplier', clientRouter);
 app.use('/product', productRouter);
 app.use('/warehouse', warehouseRouter);
 
@@ -26,3 +28,4 @@ app.get('/health', (req, res) => {
 app.listen(port, () => {
   console.log('Demo app is up and listening to port: ' + port);
 })
+
