@@ -60,10 +60,13 @@ router.post('/', async (req, res) => {
         entrada.pk = 'dragua#purchase'
         entrada.sk = Date.now().toString()
         entrada.BusinessName = response2.Items[0].BusinessName
+        entrada.Rif = response2.Items[0].Rif
+        entrada.EmailContact = response2.Items[0].EmailContact
         const params = {
           TableName: dynamodbTableName,
           Item: entrada
         }
+        console.log(params.Item)
         await dynamodb.put(params).promise().then(() => {
           const body = {
             Operation: 'SAVE',
