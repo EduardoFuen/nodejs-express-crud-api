@@ -6,6 +6,7 @@ const port = process.env.PORT || 3050;
 const clientRouter = require('./routes/cliente');
 const productRouter = require('./routes/product');
 const warehouseRouter = require('./routes/warehouse');
+const purchaseRouter = require('./routes/purchase');
 app.use(express.json({limit: '50mb'}));
 //app.use(express.urlencoded({limit: '50mb'}));
 app.use(
@@ -13,6 +14,7 @@ app.use(
     origin: "*",
   }),
 );
+app.use('/purchase', purchaseRouter);
 app.use('/supplier', clientRouter);
 app.use('/product', productRouter);
 app.use('/warehouse', warehouseRouter);
