@@ -26,18 +26,17 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/byid', async (req, res) => {
-  console.log(req.params)
-  console.log(req)
+  console.log(req.query.ID)
   const params = {
     TableName: dynamodbTableName,
     KeyConditionExpression: 'pk = :hkey and sk = :skey',
     ExpressionAttributeValues: {
       ':hkey': 'dragua#purchase',
-      ':skey': 'dragua#purchase'
+      ':skey': req.query.ID
     }
   };
   await dynamodb.query(params).promise().then(response => {
-    res.json(response.Items);
+    res.json(response.Items[0]);
   }, error => {
     console.error('Do your custom error handling here. I am just ganna log it out: ', error);
     res.status(500).send(error);
