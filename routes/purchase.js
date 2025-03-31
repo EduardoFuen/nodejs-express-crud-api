@@ -26,20 +26,32 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/byid', async (req, res) => {
-  console.log(req.query.ID)
-  const params = {
+  const params2 = {
     TableName: dynamodbTableName,
-    KeyConditionExpression: 'pk = :hkey and sk = :skey',
+    KeyConditionExpression: 'pk = :hkey',
     ExpressionAttributeValues: {
-      ':hkey': 'dragua#purchase',
-      ':skey': req.query.ID
+      ':hkey': 'dragua#product'
     }
   };
-  await dynamodb.query(params).promise().then(response => {
-    res.json(response.Items[0]);
-  }, error => {
-    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
-    res.status(500).send(error);
+  await dynamodb.query(params2).promise().then(async response2 => {
+    const params = {
+      TableName: dynamodbTableName,
+      KeyConditionExpression: 'pk = :hkey and sk = :skey',
+      ExpressionAttributeValues: {
+        ':hkey': 'dragua#purchase',
+        ':skey': req.query.ID
+      }
+    };
+    await dynamodb.query(params).promise().then(response => {
+      response.Items[0].Products = response2.Items
+      res.json(response.Items[0]);
+    }, error => {
+      console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+      res.status(500).send(error);
+    })
+  }, error2 => {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error2);
+    res.status(500).send(error2);
   })
 })
 
