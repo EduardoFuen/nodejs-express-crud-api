@@ -180,6 +180,7 @@ router.delete('/', async (req, res) => {
     },
     ReturnValues: 'ALL_OLD'
   }
+  console.log(params)
   await dynamodb.delete(params).promise().then(response => {
     const body = {
       Operation: 'DELETE',
