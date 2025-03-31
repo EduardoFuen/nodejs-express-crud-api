@@ -171,11 +171,12 @@ router.patch('/', async (req, res) => {
 })
 
 router.delete('/', async (req, res) => {
+  let id = req.body.ID
   const params = {
     TableName: dynamodbTableName,
     Key: {
       'pk': 'dragua#purchase',
-      'sk': req.body.ID,
+      'sk': `'${id}'`,
     },
     ReturnValues: 'ALL_OLD'
   }
