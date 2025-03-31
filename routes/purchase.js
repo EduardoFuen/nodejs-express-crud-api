@@ -27,6 +27,7 @@ router.get('/', async (req, res) => {
 
 router.get('/byid', async (req, res) => {
   console.log(req.params)
+  console.log(req)
   const params = {
     TableName: dynamodbTableName,
     KeyConditionExpression: 'pk = :hkey and sk = :skey',
