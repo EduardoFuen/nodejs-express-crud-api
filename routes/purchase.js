@@ -110,6 +110,40 @@ router.post('/', async (req, res) => {
       })
 })
 
+router.post('/', async (req, res) => {
+  const params2 = {
+      TableName: dynamodbTableName,
+      KeyConditionExpression: 'pk = :hkey and sk = :skey',
+      ExpressionAttributeValues: {
+        ':hkey': 'dragua#client',
+        ':skey': req.body.SupplierID,
+      }
+    };
+    await dynamodb.query(params2).promise().then(async response2 => {
+      let entrada = req.body
+      entrada.pk = 'dragua#purchase'
+      entrada.BusinessName = response2.Items[0].BusinessName
+      entrada.Rif = response2.Items[0].Rif
+      entrada.EmailContact = response2.Items[0].EmailContact
+      const params = {
+        TableName: dynamodbTableName,
+        Item: entrada
+      }
+      console.log(params.Item)
+      await dynamodb.put(params).promise().then(() => {
+        const body = {
+          Operation: 'SAVE',
+          Message: 'SUCCESS',
+          Item: req.body
+        }
+        res.status(200).send(body)
+      }, error => {
+        console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+        res.status(500).send(error);
+      })
+    })
+})
+
 router.patch('/', async (req, res) => {
   const params = {
     TableName: dynamodbTableName,
@@ -137,11 +171,12 @@ router.patch('/', async (req, res) => {
 })
 
 router.delete('/', async (req, res) => {
+  console.log(req.body)
   const params = {
     TableName: dynamodbTableName,
     Key: {
       'pk': 'dragua#purchase',
-      'sk': req.body.ID,
+      'sk': req.body.sk,
     },
     ReturnValues: 'ALL_OLD'
   }
