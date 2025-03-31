@@ -25,6 +25,24 @@ router.get('/', async (req, res) => {
   })
 })
 
+router.get('/byid', async (req, res) => {
+  console.log(req.params)
+  const params = {
+    TableName: dynamodbTableName,
+    KeyConditionExpression: 'pk = :hkey and sk = :skey',
+    ExpressionAttributeValues: {
+      ':hkey': 'dragua#purchase',
+      ':skey': 'dragua#purchase'
+    }
+  };
+  await dynamodb.query(params).promise().then(response => {
+    res.json(response.Items);
+  }, error => {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+    res.status(500).send(error);
+  })
+})
+
 router.get('/all', async (req, res) => {
   console.log("entro")
   const params = {
@@ -58,7 +76,6 @@ router.post('/', async (req, res) => {
       await dynamodb.query(params2).promise().then(async response2 => {
         let entrada = req.body
         entrada.pk = 'dragua#purchase'
-        entrada.sk = Date.now().toString()
         entrada.BusinessName = response2.Items[0].BusinessName
         entrada.Rif = response2.Items[0].Rif
         entrada.EmailContact = response2.Items[0].EmailContact
