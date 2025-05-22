@@ -7,6 +7,7 @@ const clientRouter = require('./routes/cliente');
 const productRouter = require('./routes/product');
 const warehouseRouter = require('./routes/warehouse');
 const purchaseRouter = require('./routes/purchase');
+const loginRouter = require('./routes/login');
 app.use(express.json({limit: '50mb'}));
 //app.use(express.urlencoded({limit: '50mb'}));
 app.use(
@@ -18,6 +19,7 @@ app.use('/purchase', purchaseRouter);
 app.use('/supplier', clientRouter);
 app.use('/product', productRouter);
 app.use('/warehouse', warehouseRouter);
+app.use('/auth', loginRouter);
 
 app.get('/', (req, res) => {
   res.send('<h1>Node.js CRUD API</h1> <h4>Message: Success</h4><p>Version: 1.0</p>');
