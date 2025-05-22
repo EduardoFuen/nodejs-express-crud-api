@@ -10,6 +10,7 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 const dynamodbTableName = 'TestTable';
 
 router.post('/', async (req, res) => {
+    console.log("peitcion")
     const params = {
         TableName: dynamodbTableName,
         KeyConditionExpression: 'pk = :hkey',
