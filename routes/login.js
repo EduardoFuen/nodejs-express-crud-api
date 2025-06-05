@@ -33,6 +33,7 @@ router.post('/', async (req, res) => {
   let entrada = req.body
   entrada.pk = 'dragua#user'
   entrada.sk = Date.now().toString()
+  req.body.username = req.body.email
   const params = {
     TableName: dynamodbTableName,
     Item: req.body
