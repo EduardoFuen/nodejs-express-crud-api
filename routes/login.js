@@ -60,12 +60,7 @@ router.post('/', async (req, res) => {
         }
       };
   await dynamodb.query(params).promise().then(response => {
-    const body = {
-      Operation: 'SAVE',
-      Message: 'SUCCESS',
-      Item: response.Items
-    }
-    res.status(200).send(body)
+     res.json(response.Items);
   }, error => {
     console.error('Do your custom error handling here. I am just ganna log it out: ', error);
     res.status(500).send(error);
