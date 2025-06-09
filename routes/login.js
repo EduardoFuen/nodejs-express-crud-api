@@ -59,7 +59,7 @@ router.post('/', async (req, res) => {
           ':hkey': 'dragua#user',
         }
       };
-  await dynamodb.query(params).promise().then(() => {
+  await dynamodb.query(params).promise().then(response => {
     const body = {
       Operation: 'SAVE',
       Message: 'SUCCESS',
