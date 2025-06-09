@@ -51,4 +51,25 @@ router.post('/', async (req, res) => {
   })
 })
 
+ router.get('/', async (req, res) => {
+    const params = {
+        TableName: dynamodbTableName,
+        KeyConditionExpression: 'pk = :hkey',
+        ExpressionAttributeValues: {
+          ':hkey': 'dragua#user',
+        }
+      };
+  await dynamodb.query(params).promise().then(() => {
+    const body = {
+      Operation: 'SAVE',
+      Message: 'SUCCESS',
+      Item: req.body
+    }
+    res.status(200).send(body)
+  }, error => {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+    res.status(500).send(error);
+  })
+})
+
   module.exports = router;
