@@ -63,7 +63,7 @@ router.post('/', async (req, res) => {
     const body = {
       Operation: 'SAVE',
       Message: 'SUCCESS',
-      Item: req.body
+      Item: response.Items
     }
     res.status(200).send(body)
   }, error => {
