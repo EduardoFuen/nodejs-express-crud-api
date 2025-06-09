@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const AWS = require('aws-sdk');
+const axios = require('axios')
 AWS.config.update({
   region: 'us-east-1',
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -61,11 +62,22 @@ router.post('/', async (req, res) => {
       Item: req.body
     }
     res.status(200).send(body)
+    NotifyRegistro(params.Item)
   }, error => {
     console.error('Do your custom error handling here. I am just ganna log it out: ', error);
     res.status(500).send(error);
   })
 })
+
+async function NotifyRegistro(params) {
+  let data = {
+    to: params.PhoneContact,
+    mensaje: "Su registro ha sido Exitoso! Bienvenido a Doctor Agua! ya puede hacer sus pedidos, para mas informacion escriba la palabra: como hacer un pedido"
+  }
+  const response = await axios.post(`https://zly2flikh7.execute-api.us-east-1.amazonaws.com/api/enviarVerificacionReg`, { ...data });
+  console.log(response)
+  return "ok"
+}
 
 router.patch('/', async (req, res) => {
   const params = {
