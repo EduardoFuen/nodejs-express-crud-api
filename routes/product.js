@@ -167,6 +167,7 @@ router.post('/store', async (req, res) => {
   let entrada = req.body
   entrada.pk = 'dragua#store'
   entrada.sk = Date.now().toString()
+  entrada.ID = entrada.sk
   const params = {
     TableName: dynamodbTableName,
     Item: req.body
