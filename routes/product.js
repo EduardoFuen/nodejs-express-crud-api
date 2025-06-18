@@ -129,4 +129,22 @@ async function scanDynamoRecords(scanParams, itemArray) {
   }
 }
 
+//Store
+
+router.get('/store/', async (req, res) => {
+  const params = {
+    TableName: dynamodbTableName,
+    KeyConditionExpression: 'pk = :hkey',
+    ExpressionAttributeValues: {
+      ':hkey': 'dragua#store'
+    }
+  };
+  await dynamodb.query(params).promise().then(response => {
+    res.json(response.Items);
+  }, error => {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+    res.status(500).send(error);
+  })
+})
+
 module.exports = router;
