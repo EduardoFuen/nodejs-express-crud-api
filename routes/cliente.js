@@ -50,6 +50,7 @@ router.get('/all', async (req, res) => {
 router.post('/', async (req, res) => {
   let entrada = req.body
   entrada.pk = 'dragua#client'
+  entrada.Code = entrada.Rif
   entrada.sk = Date.now().toString()
   const params = {
     TableName: dynamodbTableName,
