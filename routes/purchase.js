@@ -126,12 +126,23 @@ router.put('/', async (req, res) => {
             Message: 'SUCCESS',
             Item: req.body
           }
+          NotifyRegistro(req.body)
           res.status(200).send(body)
         }, error => {
           console.error('Do your custom error handling here. I am just ganna log it out: ', error);
           res.status(500).send(error);
         })
 })
+
+async function NotifyRegistro(params) {
+  let data = {
+    to: params.PhoneContact,
+    mensaje: "Su pago ha sido procesado, Gracias por comprar en Doctor Agua!"
+  }
+  const response = await axios.post(`https://zly2flikh7.execute-api.us-east-1.amazonaws.com/api/enviarVerificacionReg`, { ...data });
+  console.log(response)
+  return "ok"
+}
 
 router.patch('/', async (req, res) => {
   const params = {
