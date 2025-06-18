@@ -138,7 +138,7 @@ router.put('/', async (req, res) => {
 async function NotifyRegistro(params) {
   let data = {
     to: params.PhoneContact,
-    mensaje: "Su pago ha sido procesado, Gracias por comprar en Doctor Agua!"
+    mensaje: `Su pago por:$${params.Total} ha sido procesado, Gracias por comprar en Doctor Agua!`
   }
   const response = await axios.post(`https://zly2flikh7.execute-api.us-east-1.amazonaws.com/api/enviarVerificacionReg`, { ...data });
   console.log(response)
