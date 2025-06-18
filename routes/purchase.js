@@ -114,7 +114,8 @@ router.put('/', async (req, res) => {
   const params2 = {
       TableName: dynamodbTableName,
       Key: { pk : 'dragua#purchase', sk:  req.body.sk},
-      UpdateExpression: 'set Status = :x',
+      UpdateExpression: 'set #a = :x',
+      ExpressionAttributeNames: {'#a' : 'Status'},
       ExpressionAttributeValues: {
         ':x': 1
       }
