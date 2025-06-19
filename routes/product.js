@@ -148,7 +148,7 @@ router.get('/store/', async (req, res) => {
 })
 
 router.put('/store', async (req, res) => {
-  let nuevovalor = req.body.Exist + req.body.Quantity
+  let nuevovalor = parseInt(req.body.Exist) + parseInt(req.body.Quantity)
   const params = {
     TableName: dynamodbTableName,
     Key: {
