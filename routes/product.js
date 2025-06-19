@@ -185,12 +185,12 @@ router.post('/provider/', async (req, res) => {
   })
 })
 
-router.delete('/provider/', async (req, res) => {
+router.delete('/provider', async (req, res) => {
   const params = {
     TableName: dynamodbTableName,
     Key: {
       'pk': 'dragua#provider',
-      'sk': req.body.ID,
+      'sk': req.body.IdProvider,
     },
     ReturnValues: 'ALL_OLD'
   }
