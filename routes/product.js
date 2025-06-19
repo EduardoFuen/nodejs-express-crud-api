@@ -163,6 +163,50 @@ router.get('/provider/', async (req, res) => {
   })
 })
 
+router.post('/provider/', async (req, res) => {
+  let entrada = req.body
+  entrada.pk = 'dragua#provider'
+  entrada.sk = Date.now().toString()
+  entrada.idProvider = entrada.sk
+  const params = {
+    TableName: dynamodbTableName,
+    Item: req.body
+  }
+  await dynamodb.put(params).promise().then(() => {
+    const body = {
+      Operation: 'SAVE',
+      Message: 'SUCCESS',
+      Item: req.body
+    }
+    res.status(200).send(body)
+  }, error => {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+    res.status(500).send(error);
+  })
+})
+
+router.delete('/provider/', async (req, res) => {
+  const params = {
+    TableName: dynamodbTableName,
+    Key: {
+      'pk': 'dragua#provider',
+      'sk': req.body.ID,
+    },
+    ReturnValues: 'ALL_OLD'
+  }
+  await dynamodb.delete(params).promise().then(response => {
+    const body = {
+      Operation: 'DELETE',
+      Message: 'SUCCESS',
+      Item: response
+    }
+    res.json(body);
+  }, error => {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+    res.status(500).send(error);
+  })
+})
+
 router.post('/store', async (req, res) => {
   let entrada = req.body
   entrada.pk = 'dragua#store'
