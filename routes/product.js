@@ -147,6 +147,22 @@ router.get('/store/', async (req, res) => {
   })
 })
 
+router.get('/store/entry', async (req, res) => {
+  const params = {
+    TableName: dynamodbTableName,
+    KeyConditionExpression: 'pk = :hkey',
+    ExpressionAttributeValues: {
+      ':hkey': 'dragua#storeentry'
+    }
+  };
+  await dynamodb.query(params).promise().then(response => {
+    res.json(response.Items);
+  }, error => {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+    res.status(500).send(error);
+  })
+})
+
 router.get('/provider/', async (req, res) => {
   const params = {
     TableName: dynamodbTableName,
