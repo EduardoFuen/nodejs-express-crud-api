@@ -147,6 +147,22 @@ router.get('/store/', async (req, res) => {
   })
 })
 
+router.get('/dolar/', async (req, res) => {
+  const params = {
+    TableName: dynamodbTableName,
+    KeyConditionExpression: 'pk = :hkey',
+    ExpressionAttributeValues: {
+      ':hkey': 'dragua#dolar'
+    }
+  };
+  await dynamodb.query(params).promise().then(response => {
+    res.json(response.Items);
+  }, error => {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+    res.status(500).send(error);
+  })
+})
+
 router.put('/store', async (req, res) => {
   let nuevovalor = parseInt(req.body.Exist) + parseInt(req.body.Quantity)
   const params = {
