@@ -195,7 +195,7 @@ router.put('/cambios', async (req, res) => {
   const params = {
     TableName: dynamodbTableName,
     Key: {
-      'pk': 'dragua#store',
+      'pk': 'dragua#dolar',
       'sk': req.body.ID,
     },
     UpdateExpression: `set BCV = :value, Date = :value2`,
