@@ -190,6 +190,34 @@ router.put('/store', async (req, res) => {
   })
 })
 
+router.put('/cambios', async (req, res) => {
+  let horaactualizacino = Date.now()
+  const params = {
+    TableName: dynamodbTableName,
+    Key: {
+      'pk': 'dragua#store',
+      'sk': req.body.ID,
+    },
+    UpdateExpression: `set BCV = :value, Date = :value2`,
+    ExpressionAttributeValues: {
+      ':value': req.body.BCV,
+      ':value2': horaactualizacino,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  }
+  await dynamodb.update(params).promise().then(response => {
+    const body = {
+      Operation: 'UPDATE',
+      Message: 'SUCCESS',
+      UpdatedAttributes: response
+    }
+    res.json(body);
+  }, error => {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+    res.status(500).send(error);
+  })
+})
+
 router.get('/store/entry', async (req, res) => {
   const params = {
     TableName: dynamodbTableName,
