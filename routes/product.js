@@ -198,7 +198,11 @@ router.put('/cambios', async (req, res) => {
       'pk': 'dragua#dolar',
       'sk': req.body.ID,
     },
-    UpdateExpression: `set BCV = :value, Date = :value2`,
+    UpdateExpression: `set #BCV = :value, #dt = :value2`,
+    ExpressionAttributeNames:{
+      "#BCV": "BCV",
+      "#dt": "Date",
+    },
     ExpressionAttributeValues: {
       ':value': req.body.BCV,
       ':value2': horaactualizacino,
