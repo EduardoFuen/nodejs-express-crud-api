@@ -9,7 +9,7 @@ AWS.config.update({
 });
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const dynamodbTableName = 'TestTable';
-
+const token = "EAAK0ZCFTtWJABPLtOgZAaYRFbkhQZCIAfeltVyOXLEnn412y9pIXZB5IGZAu5pH9YvTXgzZBhRSNO6AMJGKLyCq1tZC91WmQiZB3ZCaGSgnGxtDwJaujcUxsWbtFWe1wdObB9w75kmAm2suk8XediYXBvqF5rWtx0gI54nrgAiEv8k2dfhPrK56fTEjktKlZB868HrxgZDZD"
 router.get('/', async (req, res) => {
   const params = {
     TableName: dynamodbTableName,
@@ -63,22 +63,43 @@ router.post('/', async (req, res) => {
       Item: req.body
     }
     res.status(200).send(body)
-    NotifyRegistro(params.Item)
+    metaNotify(params.Item)
   }, error => {
     console.error('Do your custom error handling here. I am just ganna log it out: ', error);
     res.status(500).send(error);
   })
 })
 
-async function NotifyRegistro(params) {
+/*async function NotifyRegistro(params) {
   let data = {
     to: params.PhoneContact,
-    mensaje: "Su registro ha sido Exitoso! Bienvenido a Doctor Agua! ya puede hacer sus pedidos, para mas informacion escriba la palabra: como hacer un pedido"
+    mensaje: "Su registro ha sido Exitoso! Bienvenido a Doctor Agua! ya puede hacer sus pedidos, para mas informacion seleccione el menu: como hacer un pedido"
   }
   const response = await axios.post(`https://zly2flikh7.execute-api.us-east-1.amazonaws.com/api/enviarVerificacionReg`, { ...data });
   console.log(response)
   return "ok"
+}*/
+
+async function metaNotify(params) {
+ await axios({
+        method: "POST",
+        url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          messaging_product: "whatsapp",
+          to: params.PhoneContact,
+          type: "text",
+           text: {
+              body: "Su registro ha sido Exitoso! Bienvenido a Doctor Agua! ya puede hacer sus pedidos, para mas informacion seleccione el menu: como hacer un pedido"
+            }
+        },
+      });
+  return "ok"
 }
+
+
 
 router.patch('/', async (req, res) => {
   const params = {
