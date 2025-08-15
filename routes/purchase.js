@@ -214,7 +214,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
                 longitude: dtoscliente.longitude,
                 latitude: dtoscliente.latitude,
                 name: "Delivery para "+dtoscliente.BusinessName,
-                address: `Producto a entregar: ${productoentrega}`
+                address: productoentrega
               }
           },
         });
