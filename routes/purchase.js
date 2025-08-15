@@ -215,7 +215,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
                 longitude: dtoscliente.longitude,
                 latitude: dtoscliente.latitude,
                 name: "Delivery para "+dtoscliente.BusinessName,
-                address: "El detalle del delivery le llegara en el siguiente mensaje..."
+                address: `El detalle del delivery: ${JSON.stringify(productoentrega)}`
               }
           },
         });
@@ -232,7 +232,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
             type: "text",
              text: {
                 body: `Detalles del delivery:
-                ${productoentrega}`
+                ${JSON.stringify(productoentrega)}`
               }
           },
         });
