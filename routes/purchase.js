@@ -182,7 +182,7 @@ async function ObtenerDatosCompra(params) {
 async function NotifyRegistro(params,dtoscompra,dtoscliente) {
   let productoentrega = []
   dtoscompra.Articles.forEach(element => {
-    productoentrega.push({Producto: element.ProductID, Cantidad: Count})
+    productoentrega.push({Producto: element.ProductID, Cantidad: element.Count})
   });
    await axios({
           method: "POST",
