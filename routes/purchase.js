@@ -129,6 +129,7 @@ router.put('/', async (req, res) => {
             Item: req.body
           }
           let dtoscompra = await ObtenerDatosCompra(req.body.sk)
+          console.log(dtoscompra)
           let dtoscliente = await ObtenerDatosClienteCompra(dtoscompra)
           NotifyRegistro(req.body,dtoscompra,dtoscliente)
           res.status(200).send(body)
