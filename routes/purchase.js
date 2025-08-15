@@ -128,10 +128,7 @@ router.put('/', async (req, res) => {
             Message: 'SUCCESS',
             Item: req.body
           }
-          let dtoscompra = await ObtenerDatosCompra(req.body.sk)
-          console.log(dtoscompra)
-          let dtoscliente = await ObtenerDatosClienteCompra(dtoscompra)
-          NotifyRegistro(req.body,dtoscompra,dtoscliente)
+          ObtenerDatosCompra(req.body.sk)
           res.status(200).send(body)
           
         }, error => {
@@ -141,7 +138,7 @@ router.put('/', async (req, res) => {
 })
 
 async function ObtenerDatosCompra(params) {
-   const params2 = {
+   const params3 = {
       TableName: dynamodbTableName,
       KeyConditionExpression: 'pk = :hkey and sk = :skey',
       ExpressionAttributeValues: {
@@ -149,19 +146,9 @@ async function ObtenerDatosCompra(params) {
         ':skey': params
       }
     };
-    await dynamodb.query(params2).promise().then(response => {
-      console.log(response.Items[0])
-      return response.Items[0]
-    }, error => {
-      console.error('error 155', error);
-      return error
-
-    })
-}
-
-async function ObtenerDatosClienteCompra(params) {
-  console.log(params)
-   const params2 = {
+    await dynamodb.query(params3).promise().then(async response3 => {
+      let dtoscompra = response3.Items[0]
+       const params2 = {
       TableName: dynamodbTableName,
       KeyConditionExpression: 'pk = :hkey',
       FilterExpression: 'PhoneContact = :userkey',
@@ -170,13 +157,22 @@ async function ObtenerDatosClienteCompra(params) {
         }
     };
     await dynamodb.query(params2).promise().then(response => {
+      let dtoscliente = response.Items[0]
+      NotifyRegistro(req.body,dtoscompra,dtoscliente)
       return response.Items[0]
     }, error => {
-      console.error('error 155', error);
+      console.error('error 164', error);
+      return error
+
+    })
+    }, error => {
+      console.error('error 169', error);
       return error
 
     })
 }
+
+
 
 async function NotifyRegistro(params,dtoscompra,dtoscliente) {
   let productoentrega = []
