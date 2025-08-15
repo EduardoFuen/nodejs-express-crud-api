@@ -183,7 +183,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
   dtoscompra.Articles.forEach(element => {
     productoentrega.push({Producto: element.ProductID, Cantidad: element.Count})
   });
-  let productosParaWsp = productoentrega.map(producto => `- ${producto.Producto}, $${producto.Cantidad}`);
+  let productosParaWsp = productoentrega.map(producto => `- ${producto.Cantidad}  ${producto.Producto}`);
   const productosConFormatoAmigable = productosParaWsp.join('\n');
    await axios({
           method: "POST",
