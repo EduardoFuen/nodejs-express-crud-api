@@ -163,7 +163,7 @@ async function ObtenerDatosCompra(params) {
       let dtoscliente = response.Items[0]
       console.log(dtoscompra)
        console.log(dtoscliente)
-      NotifyRegistro(req.body,dtoscompra,dtoscliente)
+      NotifyRegistro(params,dtoscompra,dtoscliente)
       return response.Items[0]
     }, error => {
       console.error('error 164', error);
