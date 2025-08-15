@@ -128,7 +128,7 @@ router.put('/', async (req, res) => {
             Message: 'SUCCESS',
             Item: req.body
           }
-          ObtenerDatosCompra(req.body.sk)
+          ObtenerDatosCompra(req.body)
           res.status(200).send(body)
           
         }, error => {
@@ -143,9 +143,10 @@ async function ObtenerDatosCompra(params) {
       KeyConditionExpression: 'pk = :hkey and sk = :skey',
       ExpressionAttributeValues: {
         ':hkey': 'dragua#purchase',
-        ':skey': params
+        ':skey': params.sk
       }
     };
+    console.log(params3)
     await dynamodb.query(params3).promise().then(async response3 => {
       let dtoscompra = response3.Items[0]
        const params2 = {
@@ -153,11 +154,15 @@ async function ObtenerDatosCompra(params) {
       KeyConditionExpression: 'pk = :hkey',
       FilterExpression: 'PhoneContact = :userkey',
         ExpressionAttributeValues: {
-          ':userkey': params.PhoneContact,
+          ':hkey': 'dragua#client',
+          ':userkey': dtoscompra.PhoneContact,
         }
     };
+      console.log(params2)
     await dynamodb.query(params2).promise().then(response => {
       let dtoscliente = response.Items[0]
+      console.log(dtoscompra)
+       console.log(dtoscliente)
       NotifyRegistro(req.body,dtoscompra,dtoscliente)
       return response.Items[0]
     }, error => {
