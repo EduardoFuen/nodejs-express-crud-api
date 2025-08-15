@@ -140,7 +140,7 @@ router.put('/', async (req, res) => {
 })
 
 async function ObtenerDatosCompra(params) {
-   const params = {
+   const params2 = {
       TableName: dynamodbTableName,
       KeyConditionExpression: 'pk = :hkey and sk = :skey',
       ExpressionAttributeValues: {
@@ -148,7 +148,7 @@ async function ObtenerDatosCompra(params) {
         ':skey': params
       }
     };
-    await dynamodb.query(params).promise().then(response => {
+    await dynamodb.query(params2).promise().then(response => {
       return response.Items[0]
     }, error => {
       console.error('error 155', error);
@@ -158,7 +158,7 @@ async function ObtenerDatosCompra(params) {
 }
 
 async function ObtenerDatosClienteCompra(params) {
-   const params = {
+   const params2 = {
       TableName: dynamodbTableName,
       KeyConditionExpression: 'pk = :hkey',
       FilterExpression: 'PhoneContact = :userkey',
@@ -166,7 +166,7 @@ async function ObtenerDatosClienteCompra(params) {
           ':userkey': params.PhoneContact,
         }
     };
-    await dynamodb.query(params).promise().then(response => {
+    await dynamodb.query(params2).promise().then(response => {
       return response.Items[0]
     }, error => {
       console.error('error 155', error);
