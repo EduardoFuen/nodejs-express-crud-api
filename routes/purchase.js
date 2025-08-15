@@ -192,28 +192,14 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
           },
           data: {
             messaging_product: "whatsapp",
-            to: params.PhoneContact,
+            to: dtoscliente.PhoneContact,
             type: "text",
              text: {
                 body: `Su pago por:$${params.Total} ha sido procesado, Gracias por comprar en Doctor Agua!`
               }
           },
         });
-          /*await axios({
-          method: "POST",
-          url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          data: {
-            messaging_product: "whatsapp",
-            to: "+584228012645",
-            type: "text",
-            text: {
-                body: `Su pago por:$${params.Total} ha sido procesado, Gracias por comprar en Doctor Agua!`
-              }
-          },
-        });*/
+
          await axios({
           method: "POST",
           url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
@@ -227,8 +213,8 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
              location: {
                 longitude: dtoscliente.longitude,
                 latitude: dtoscliente.latitude,
-                name: "Delivery para "+dtoscliente.NameContact,
-                address: `Producto a entregar: ${productoentrega}`
+                name: "Delivery para "+dtoscliente.BusinessName,
+                address: `Producto a entregar`
               }
           },
         });
