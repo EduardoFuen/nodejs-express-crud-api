@@ -210,7 +210,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
           },
           data: {
             messaging_product: "whatsapp",
-            to: "+584243044604",
+            to: "+584228012645",
             type: "location",
              location: {
                 longitude: dtoscliente.longitude,
@@ -229,7 +229,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
           },
           data: {
             messaging_product: "whatsapp",
-            to: "+584243044604",
+            to: "+584228012645",
             type: "text",
              text: {
                 body: `${productosConFormatoAmigable}`
