@@ -122,14 +122,14 @@ router.put('/', async (req, res) => {
         ':x': 1
       }
     };
-    await dynamodb.update(params2).promise().then(() => {
+    await dynamodb.update(params2).promise().then(async() => {
           const body = {
             Operation: 'SAVE',
             Message: 'SUCCESS',
             Item: req.body
           }
-          let dtoscompra = ObtenerDatosCompra(req.body.sk)
-          let dtoscliente = ObtenerDatosClienteCompra(dtoscompra)
+          let dtoscompra = await ObtenerDatosCompra(req.body.sk)
+          let dtoscliente = await ObtenerDatosClienteCompra(dtoscompra)
           NotifyRegistro(req.body,dtoscompra,dtoscliente)
           res.status(200).send(body)
           
