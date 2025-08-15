@@ -128,15 +128,58 @@ router.put('/', async (req, res) => {
             Message: 'SUCCESS',
             Item: req.body
           }
-          NotifyRegistro(req.body)
+          let dtoscompra = ObtenerDatosCompra(req.body.sk)
+          let dtoscliente = ObtenerDatosClienteCompra(dtoscompra)
+          NotifyRegistro(req.body,dtoscompra,dtoscliente)
           res.status(200).send(body)
+          
         }, error => {
           console.error('Do your custom error handling here. I am just ganna log it out: ', error);
           res.status(500).send(error);
         })
 })
 
-async function NotifyRegistro(params) {
+async function ObtenerDatosCompra(params) {
+   const params = {
+      TableName: dynamodbTableName,
+      KeyConditionExpression: 'pk = :hkey and sk = :skey',
+      ExpressionAttributeValues: {
+        ':hkey': 'dragua#purchase',
+        ':skey': params
+      }
+    };
+    await dynamodb.query(params).promise().then(response => {
+      return response.Items[0]
+    }, error => {
+      console.error('error 155', error);
+      return error
+
+    })
+}
+
+async function ObtenerDatosClienteCompra(params) {
+   const params = {
+      TableName: dynamodbTableName,
+      KeyConditionExpression: 'pk = :hkey',
+      FilterExpression: 'PhoneContact = :userkey',
+        ExpressionAttributeValues: {
+          ':userkey': params.PhoneContact,
+        }
+    };
+    await dynamodb.query(params).promise().then(response => {
+      return response.Items[0]
+    }, error => {
+      console.error('error 155', error);
+      return error
+
+    })
+}
+
+async function NotifyRegistro(params,dtoscompra,dtoscliente) {
+  let productoentrega = []
+  dtoscompra.Articles.forEach(element => {
+    productoentrega.push({Producto: element.ProductID, Cantidad: Count})
+  });
    await axios({
           method: "POST",
           url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
@@ -149,6 +192,39 @@ async function NotifyRegistro(params) {
             type: "text",
              text: {
                 body: `Su pago por:$${params.Total} ha sido procesado, Gracias por comprar en Doctor Agua!`
+              }
+          },
+        });
+          /*await axios({
+          method: "POST",
+          url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            messaging_product: "whatsapp",
+            to: "+584228012645",
+            type: "text",
+            text: {
+                body: `Su pago por:$${params.Total} ha sido procesado, Gracias por comprar en Doctor Agua!`
+              }
+          },
+        });*/
+         await axios({
+          method: "POST",
+          url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            messaging_product: "whatsapp",
+            to: "+584243680160",
+            type: "location",
+             location: {
+                longitude: dtoscliente.longitude,
+                latitude: dtoscliente.latitude,
+                name: "Delivery para "+dtoscliente.NameContact,
+                address: `Producto a entregar: ${productoentrega}`
               }
           },
         });
