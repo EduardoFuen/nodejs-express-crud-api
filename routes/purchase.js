@@ -146,7 +146,7 @@ async function ObtenerDatosCompra(params) {
         ':skey': params.sk
       }
     };
-    console.log(params3)
+
     await dynamodb.query(params3).promise().then(async response3 => {
       let dtoscompra = response3.Items[0]
        const params2 = {
@@ -158,11 +158,10 @@ async function ObtenerDatosCompra(params) {
           ':userkey': dtoscompra.PhoneContact,
         }
     };
-      console.log(params2)
+
     await dynamodb.query(params2).promise().then(response => {
       let dtoscliente = response.Items[0]
-      console.log(dtoscompra)
-       console.log(dtoscliente)
+  
       NotifyRegistro(params,dtoscompra,dtoscliente)
       return response.Items[0]
     }, error => {
@@ -184,6 +183,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
   dtoscompra.Articles.forEach(element => {
     productoentrega.push({Producto: element.ProductID, Cantidad: element.Count})
   });
+  console.log(dtoscliente.PhoneContact)
    await axios({
           method: "POST",
           url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
