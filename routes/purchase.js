@@ -183,7 +183,8 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
   dtoscompra.Articles.forEach(element => {
     productoentrega.push({Producto: element.ProductID, Cantidad: element.Count})
   });
-  console.log(dtoscliente.PhoneContact)
+  let productosParaWsp = productoentrega.map(producto => `- ${producto.Producto}, $${producto.Cantidad}`);
+  const productosConFormatoAmigable = productosParaWsp.join('\n');
    await axios({
           method: "POST",
           url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
@@ -215,7 +216,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
                 longitude: dtoscliente.longitude,
                 latitude: dtoscliente.latitude,
                 name: "Delivery para "+dtoscliente.BusinessName,
-                address: `El detalle del delivery: ${JSON.stringify(productoentrega)}`
+                address: "El detalle del delivery le llegara en el siguiente mensaje..."
               }
           },
         });
@@ -231,8 +232,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
             to: +584243680160,
             type: "text",
              text: {
-                body: `Detalles del delivery:
-                ${JSON.stringify(productoentrega)}`
+                body: `${productosConFormatoAmigable}`
               }
           },
         });
