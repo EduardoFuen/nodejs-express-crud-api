@@ -150,6 +150,7 @@ async function ObtenerDatosCompra(params) {
       }
     };
     await dynamodb.query(params2).promise().then(response => {
+      console.log(response.Items[0])
       return response.Items[0]
     }, error => {
       console.error('error 155', error);
