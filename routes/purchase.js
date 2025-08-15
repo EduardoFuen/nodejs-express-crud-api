@@ -200,6 +200,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
           },
         });
 
+
          await axios({
           method: "POST",
           url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
@@ -214,7 +215,24 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
                 longitude: dtoscliente.longitude,
                 latitude: dtoscliente.latitude,
                 name: "Delivery para "+dtoscliente.BusinessName,
-                address: productoentrega
+                address: "El detalle del delivery le llegara en el siguiente mensaje..."
+              }
+          },
+        });
+
+                await axios({
+          method: "POST",
+          url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            messaging_product: "whatsapp",
+            to: +584243680160,
+            type: "text",
+             text: {
+                body: `Detalles del delivery:
+                ${productoentrega}`
               }
           },
         });
