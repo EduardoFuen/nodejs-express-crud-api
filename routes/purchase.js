@@ -158,6 +158,7 @@ async function ObtenerDatosCompra(params) {
 }
 
 async function ObtenerDatosClienteCompra(params) {
+  console.log(params)
    const params2 = {
       TableName: dynamodbTableName,
       KeyConditionExpression: 'pk = :hkey',
