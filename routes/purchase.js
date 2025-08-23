@@ -215,7 +215,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
              location: {
                 longitude: dtoscliente.longitude,
                 latitude: dtoscliente.latitude,
-                name: "Delivery para "+dtoscliente.BusinessName,
+                name: "Delivery para "+dtoscliente.BusinessName+" ,Telefono: "+dtoscliente.PhoneContact,
                 address: "El detalle del delivery le llegara en el siguiente mensaje..."
               }
           },
