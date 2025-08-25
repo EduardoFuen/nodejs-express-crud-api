@@ -180,6 +180,7 @@ async function ObtenerDatosCompra(params) {
 
 async function NotifyRegistro(params,dtoscompra,dtoscliente) {
   let productoentrega = []
+  let detalledeinforma
   dtoscompra.Articles.forEach(element => {
     productoentrega.push({Producto: element.ProductID, Cantidad: element.Count})
   });
@@ -200,8 +201,22 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
               }
           },
         });
-
-
+        if(dtoscompra.TelefonoTercero){
+          detalledeinforma = {
+          longitude: dtoscliente.longitude,
+          latitude: dtoscliente.latitude,
+          name: "Delivery para "+dtoscompra.NameTercero+" ,Telefono: "+dtoscompra.TelefonoTercero,
+          address: dtoscompra.DireccionTercero
+          }
+        }else{
+        detalledeinforma = {
+          longitude: dtoscliente.longitude,
+          latitude: dtoscliente.latitude,
+          name: "Delivery para "+dtoscliente.BusinessName+" ,Telefono: "+dtoscliente.PhoneContact,
+          address: "El detalle del delivery le llegara en el siguiente mensaje..."
+          }
+        }
+       
          await axios({
           method: "POST",
           url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
@@ -212,12 +227,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
             messaging_product: "whatsapp",
             to: "+584228012645",
             type: "location",
-             location: {
-                longitude: dtoscliente.longitude,
-                latitude: dtoscliente.latitude,
-                name: "Delivery para "+dtoscliente.BusinessName+" ,Telefono: "+dtoscliente.PhoneContact,
-                address: "El detalle del delivery le llegara en el siguiente mensaje..."
-              }
+             location: detalledeinforma
           },
         });
 
