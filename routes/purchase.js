@@ -31,7 +31,7 @@ router.get('/delivery', async (req, res) => {
     TableName: dynamodbTableName,
     KeyConditionExpression: 'pk = :hkey',
     ExpressionAttributeValues: {
-      ':hkey': 'dragua#purchase'
+      ':hkey': 'dragua#delivery'
     }
   };
   await dynamodb.query(params).promise().then(response => {
