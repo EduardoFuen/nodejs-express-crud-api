@@ -220,14 +220,14 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
           detalledeinforma = {
           longitude: dtoscliente.longitude,
           latitude: dtoscliente.latitude,
-          name: "Delivery para"+dtoscompra.NameTercero+"Telefono: "+dtoscompra.TelefonoTercero,
+          name: "Delivery para"+dtoscompra.NameTercero+" Telefono: "+dtoscompra.TelefonoTercero,
           address: dtoscompra.DireccionTercero
           }
         }else{
         detalledeinforma = {
           longitude: dtoscliente.longitude,
           latitude: dtoscliente.latitude,
-          name: "Delivery para"+dtoscliente.BusinessName,
+          name: "Delivery para "+dtoscliente.BusinessName+" Telefono: "+dtoscompra.TelefonoTercero,
           address: "El detalle del delivery le llegara en el siguiente mensaje..."
           }
         }
