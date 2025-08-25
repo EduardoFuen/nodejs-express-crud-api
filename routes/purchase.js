@@ -240,7 +240,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
           },
           data: {
             messaging_product: "whatsapp",
-            to: "+584228012645",
+            to: params.IDdely,
             type: "location",
              location: detalledeinforma
           },
@@ -254,7 +254,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
           },
           data: {
             messaging_product: "whatsapp",
-            to: "+584228012645",
+            to: params.IDdely,
             type: "text",
              text: {
                 body: `${productosConFormatoAmigable}`
