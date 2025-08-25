@@ -220,19 +220,19 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
           detalledeinforma = {
           longitude: dtoscliente.longitude,
           latitude: dtoscliente.latitude,
-          name: "Delivery para "+dtoscompra.NameTercero+" ,Telefono: "+dtoscompra.TelefonoTercero,
+          name: "Delivery para"+dtoscompra.NameTercero+"Telefono: "+dtoscompra.TelefonoTercero,
           address: dtoscompra.DireccionTercero
           }
         }else{
         detalledeinforma = {
           longitude: dtoscliente.longitude,
           latitude: dtoscliente.latitude,
-          name: "Delivery para "+dtoscliente.BusinessName+" ,Telefono: "+dtoscliente.PhoneContact,
+          name: "Delivery para"+dtoscliente.BusinessName,
           address: "El detalle del delivery le llegara en el siguiente mensaje..."
           }
         }
        
-         /*await axios({
+         await axios({
           method: "POST",
           url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
           headers: {
@@ -244,7 +244,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
             type: "location",
              location: detalledeinforma
           },
-        });*/
+        });
 
                 await axios({
           method: "POST",
