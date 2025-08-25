@@ -217,18 +217,31 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
           },
         });
         if(dtoscompra.TelefonoTercero){
-          detalledeinforma = {
-          longitude: dtoscliente.longitude,
-          latitude: dtoscliente.latitude,
-          name: "Delivery para"+dtoscompra.NameTercero+" Telefono: "+dtoscompra.TelefonoTercero,
-          address: dtoscompra.DireccionTercero
-          }
+             await axios({
+          method: "POST",
+          url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            messaging_product: "whatsapp",
+            to: params.IDdely,
+            type: "text",
+             text: {
+                body: `
+                * Delivery para: ${dtoscompra.NameTercero} 
+                * Direccion: ${dtoscompra.DireccionTercero}
+                * Telefono: ${dtoscompra.TelefonoTercero}
+              El detalle le llegara en el siguiente mensaje...`
+              }
+          },
+        });
         }else{
         detalledeinforma = {
           longitude: dtoscliente.longitude,
           latitude: dtoscliente.latitude,
-          name: "Delivery para "+dtoscliente.BusinessName+" Telefono: "+dtoscompra.TelefonoTercero,
-          address: "El detalle del delivery le llegara en el siguiente mensaje..."
+          name: "Delivery para "+dtoscliente.BusinessName,
+          address: "Telefono: "+dtoscompra.PhoneContact+ "El detalle del delivery le llegara en el siguiente mensaje..."
           }
         }
        
