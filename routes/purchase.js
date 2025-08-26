@@ -42,6 +42,31 @@ router.get('/delivery', async (req, res) => {
   })
 })
 
+router.delete('/delivery', async (req, res) => {
+  let id = req.body.ID
+  const params = {
+    TableName: dynamodbTableName,
+    Key: {
+      'pk': 'dragua#purchase',
+      'sk': `${id}`,
+    },
+    ReturnValues: 'ALL_OLD'
+  }
+  console.log(params)
+  await dynamodb.delete(params).promise().then(response => {
+    const body = {
+      Operation: 'DELETE',
+      Message: 'SUCCESS',
+      Item: response
+    }
+    res.json(body);
+  }, error => {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+    res.status(500).send(error);
+  })
+})
+
+
 router.get('/byid', async (req, res) => {
   const params2 = {
     TableName: dynamodbTableName,
@@ -241,7 +266,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
           longitude: dtoscliente.longitude,
           latitude: dtoscliente.latitude,
           name: "Delivery para "+dtoscliente.BusinessName,
-          address: "Telefono: "+dtoscompra.PhoneContact+ "El detalle del delivery le llegara en el siguiente mensaje..."
+          address: "Telefono: "+dtoscompra.PhoneContact+ " Detalle a continuacion..."
           }
         }
        
