@@ -42,6 +42,29 @@ router.get('/delivery', async (req, res) => {
   })
 })
 
+router.post('/delivery', async (req, res) => {
+  let entrada = req.body
+  entrada.pk = 'dragua#delivery'
+  entrada.sk = Date.now().toString()
+  entrada.ID = entrada.sk
+
+  const params = {
+    TableName: dynamodbTableName,
+    Item: entrada
+  }
+  await dynamodb.put(params).promise().then(() => {
+    const body = {
+      Operation: 'SAVE',
+      Message: 'SUCCESS',
+      Item: entrada
+    }
+    res.status(200).send(body)
+  }, error => {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+    res.status(500).send(error);
+  })
+})
+
 router.delete('/delivery', async (req, res) => {
   let id = req.body.ID
   const params = {
