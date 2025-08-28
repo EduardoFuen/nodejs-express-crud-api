@@ -156,6 +156,7 @@ router.post('/', async (req, res) => {
         entrada.BusinessName = response2.Items[0].BusinessName
         entrada.Rif = response2.Items[0].Rif
         entrada.EmailContact = response2.Items[0].EmailContact
+        entrada.ID = await getRandomInt(1000,9999)
         const params = {
           TableName: dynamodbTableName,
           Item: entrada
@@ -387,6 +388,12 @@ async function scanDynamoRecords(scanParams, itemArray) {
   } catch(error) {
     throw new Error(error);
   }
+}
+
+async function getRandomInt(min, max) {
+   min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 module.exports = router;
