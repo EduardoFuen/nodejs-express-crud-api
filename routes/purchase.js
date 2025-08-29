@@ -335,20 +335,6 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
           },
         });
 
-           await axios({
-          method: "POST",
-          url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          data: {
-            messaging_product: "whatsapp",
-            to: params.IDdely,
-            type: "location",
-             location: detalledeinforma
-          },
-        });
-
                 await axios({
           method: "POST",
           url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
