@@ -449,6 +449,50 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
               }
           },
         });
+         await axios({
+          method: "POST",
+          url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            messaging_product: "whatsapp",
+            to: params.IDdely,
+            type: "interactive",
+             interactive:{
+            type: `list`,
+            header: {
+              type: `text`,
+              text: `Delivery para: ${dtoscompra.NameTercero}`
+            },
+            body: {
+                text: `Codigo de pedido: ${dtoscompra.idrastreo}`
+            },
+            footer:{
+              text: `Direccion: ${dtoscompra.DireccionTercero}`
+            },
+            action:{
+                button: `Actualizar Pedido`,
+                sections: [
+                    {
+                        title: `Solicitar`,
+                        rows: [{
+                            id: `123notify:${dtoscompra.idrastreo}`,
+                            title: `🚚 Notificar Salida`,
+
+                        },{
+                            id: `123llegada:${dtoscompra.idrastreo}`,
+                            title: `🚚 Notificar Llegada`,
+
+                        },
+                    ]
+                }
+                ]
+            }
+
+             }
+          },
+        });
         }
        
       
