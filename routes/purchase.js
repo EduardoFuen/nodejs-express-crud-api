@@ -242,6 +242,7 @@ async function ObtenerDatosCompra(params) {
 
 
 
+
 async function NotifyRegistro(params,dtoscompra,dtoscliente) {
   let productoentrega = []
   let detalledeinforma
@@ -266,7 +267,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
           },
         });
         if(dtoscompra.TelefonoTercero){
-             await axios({
+             /*await axios({
           method: "POST",
           url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
           headers: {
@@ -284,7 +285,56 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
               El detalle le llegara en el siguiente mensaje...`
               }
           },
+        });*/
+          await axios({
+          method: "POST",
+          url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            messaging_product: "whatsapp",
+            to: params.IDdely,
+            type: "interactive",
+             interactive:{
+            type: `list`,
+            header: {
+              type: `text`,
+              text: `Delivery para: ${dtoscompra.NameTercero}`
+            },
+            body: {
+                text: `Codigo de pedido: ${dtoscompra.idrastreo}`
+            },
+            footer:{
+              text: `Direccion: ${dtoscompra.DireccionTercero}`
+            },
+            action:{
+                button: `Solicitar Ubicacion`,
+                sections: [
+                    {
+                        title: `Solicitar`,
+                        rows: [{
+                            id: `123solici:${dtoscompra.idrastreo}`,
+                            title: `🚚 Solicitar Ubicacion`,
+
+                        },{
+                            id: `123notify:${dtoscompra.idrastreo}`,
+                            title: `🚚 Notificar Salida`,
+
+                        },{
+                            id: `123llegada:${dtoscompra.idrastreo}`,
+                            title: `🚚 Notificar Llegada`,
+
+                        },
+                    ]
+                }
+                ]
+            }
+
+             }
+          },
         });
+
            await axios({
           method: "POST",
           url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
