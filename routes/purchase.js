@@ -240,6 +240,72 @@ async function ObtenerDatosCompra(params) {
     })
 }
 
+router.get('/notifypersonal', async (req, res) => {
+  let entrada = req.body
+  entrada.pk = 'dragua#delivery'
+  entrada.sk = Date.now().toString()
+  entrada.ID = entrada.sk
+
+  const params = {
+    TableName: dynamodbTableName,
+    Item: entrada
+  }
+  await dynamodb.put(params).promise().then(() => {
+    const body = {
+      Operation: 'SAVE',
+      Message: 'SUCCESS',
+      Item: entrada
+    }
+    res.status(200).send(body)
+  }, error => {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+    res.status(500).send(error);
+  })
+})
+router.get('/openchannel', async (req, res) => {
+ const params2 = {
+      TableName: dynamodbTableName,
+      KeyConditionExpression: 'pk = :hkey',
+      FilterExpression: 'PhoneContact = :userkey',
+        ExpressionAttributeValues: {
+          ':hkey': 'dragua#delivery',
+          ':userkey': dtoscompra.PhoneContact,
+        }
+    };
+
+    await dynamodb.query(params2).promise().then(async response => {
+      let dtoscliente = response.Items
+      dtoscliente.push({Name: "Atencion Al cliente ", phoneContact: "04220086665",})
+      for (let index = 0; index < dtoscliente.length; index++) {
+      const element = dtoscliente[index];
+       await axios({
+        method: "POST",
+        url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          messaging_product: "whatsapp",
+          to: element.phoneContact,
+          type: "template",
+          template: {
+            name: "activarconversacion",
+            language: { "code": "es_CO" }
+          }
+        },
+      });
+      
+    }
+
+       res.status(200).send(dtoscliente)
+    }, error => {
+      console.error('error 164', error);
+      res.status(500).send(error);
+    })
+
+ res.status(200).send("ok")
+})
+
 
 
 
