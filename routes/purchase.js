@@ -266,10 +266,8 @@ router.get('/openchannel', async (req, res) => {
  const params2 = {
       TableName: dynamodbTableName,
       KeyConditionExpression: 'pk = :hkey',
-      FilterExpression: 'PhoneContact = :userkey',
         ExpressionAttributeValues: {
           ':hkey': 'dragua#delivery',
-          ':userkey': dtoscompra.PhoneContact,
         }
     };
 
