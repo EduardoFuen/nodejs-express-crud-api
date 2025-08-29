@@ -156,7 +156,7 @@ router.post('/', async (req, res) => {
         entrada.BusinessName = response2.Items[0].BusinessName
         entrada.Rif = response2.Items[0].Rif
         entrada.EmailContact = response2.Items[0].EmailContact
-        entrada.ID = await getRandomInt(1000,9999)
+ 
         const params = {
           TableName: dynamodbTableName,
           Item: entrada
@@ -285,16 +285,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
               }
           },
         });
-        }else{
-        detalledeinforma = {
-          longitude: dtoscliente.longitude,
-          latitude: dtoscliente.latitude,
-          name: "Delivery para "+dtoscliente.BusinessName,
-          address: "Telefono: "+dtoscompra.PhoneContact+ " Detalle a continuacion..."
-          }
-        }
-       
-         await axios({
+           await axios({
           method: "POST",
           url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
           headers: {
@@ -323,6 +314,45 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
               }
           },
         });
+        }else if(dtoscompra.delivery){
+        detalledeinforma = {
+          longitude: dtoscliente.longitude,
+          latitude: dtoscliente.latitude,
+          name: "Delivery para "+dtoscliente.BusinessName,
+          address: "Telefono: "+dtoscompra.PhoneContact+ " Detalle a continuacion..."
+          }
+             await axios({
+          method: "POST",
+          url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            messaging_product: "whatsapp",
+            to: params.IDdely,
+            type: "location",
+             location: detalledeinforma
+          },
+        });
+
+                await axios({
+          method: "POST",
+          url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            messaging_product: "whatsapp",
+            to: params.IDdely,
+            type: "text",
+             text: {
+                body: `${productosConFormatoAmigable}`
+              }
+          },
+        });
+        }
+       
+      
   return "ok"
 }
 
@@ -390,10 +420,5 @@ async function scanDynamoRecords(scanParams, itemArray) {
   }
 }
 
-async function getRandomInt(min, max) {
-   min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
 
 module.exports = router;
