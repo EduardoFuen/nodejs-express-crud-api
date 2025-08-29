@@ -463,13 +463,10 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
             type: `list`,
             header: {
               type: `text`,
-              text: `Delivery para: ${dtoscompra.NameTercero}`
+              text: `Delivery para: ${dtoscompra.BusinessName}`
             },
             body: {
                 text: `Codigo de pedido: ${dtoscompra.idrastreo}`
-            },
-            footer:{
-              text: `Direccion: ${dtoscompra.DireccionTercero}`
             },
             action:{
                 button: `Actualizar Pedido`,
