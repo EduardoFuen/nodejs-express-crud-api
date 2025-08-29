@@ -301,7 +301,6 @@ router.get('/openchannel', async (req, res) => {
       res.status(500).send(error);
     })
 
- res.status(200).send("ok")
 })
 
 
