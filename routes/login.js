@@ -51,6 +51,28 @@ router.post('/', async (req, res) => {
   })
 })
 
+router.delete('/', async (req, res) => {
+  const params = {
+    TableName: dynamodbTableName,
+    Key: {
+      'pk': 'dragua#user',
+      'sk': req.body.ID,
+    },
+    ReturnValues: 'ALL_OLD'
+  }
+  await dynamodb.delete(params).promise().then(response => {
+    const body = {
+      Operation: 'DELETE',
+      Message: 'SUCCESS',
+      Item: response
+    }
+    res.json(body);
+  }, error => {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+    res.status(500).send(error);
+  })
+})
+
  router.get('/', async (req, res) => {
     const params = {
         TableName: dynamodbTableName,
