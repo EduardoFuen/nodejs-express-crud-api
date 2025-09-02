@@ -413,7 +413,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
               }
           },
         });
-        }else if(dtoscompra.delivery){
+        }else if(dtoscompra.Ispickup == 0){
         detalledeinforma = {
           longitude: dtoscliente.longitude,
           latitude: dtoscliente.latitude,
