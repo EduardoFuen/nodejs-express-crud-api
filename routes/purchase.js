@@ -287,7 +287,7 @@ router.get('/openchannel', async (req, res) => {
           to: element.phoneContact,
           type: "template",
           template: {
-            name: "activarconversacion",
+            name: "activarflujodiario",
             language: { "code": "es_CO" }
           }
         },
