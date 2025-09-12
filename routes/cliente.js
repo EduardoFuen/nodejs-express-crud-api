@@ -92,7 +92,7 @@ async function metaNotify(params) {
           to: params.PhoneContact,
           type: "text",
            text: {
-              body: "Su registro ha sido Exitoso! Bienvenido a Doctor Agua! ya puede hacer sus pedidos, para mas informacion seleccione el menu: como hacer un pedido"
+              body: "✅ Registro exitoso ¡Bienvenido a Doctor Agua! Ya puedes realizar tus pedidos. Para más detalles, consulta el menú: Cómo hacer un pedido."
             }
         },
       });

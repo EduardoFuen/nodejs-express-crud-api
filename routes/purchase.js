@@ -325,7 +325,10 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
             to: dtoscliente.PhoneContact,
             type: "text",
              text: {
-                body: `Su pago por:$${params.Total} ha sido procesado, Gracias por comprar en Doctor Agua!`
+                body: `✅ Pago confirmado
+                Tu pago de $${params.Total} ha sido procesado con éxito.
+                ¡Gracias por elegir Doctor Agua! 
+                💧Embotella tu salud💧`
               }
           },
         });
