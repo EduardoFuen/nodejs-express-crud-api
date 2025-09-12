@@ -80,6 +80,47 @@ router.post('/', async (req, res) => {
   return "ok"
 }*/
 
+const lista = {
+            type: "list",
+            body: {
+                text: "Si deseas algo mas te invito a ver nuestro menu de servicios"
+            },
+            action:{
+                button: "Menu de servicios",
+                sections: [
+                    {
+                        title: "Menu de servicios",
+                        rows: [{
+                            id: "m1",
+                            title: "🛒 Quiero hacer un pedido",
+
+                        },
+                        {
+                            id: "m6",
+                            title: "📍 Horarios de atención.",
+                        },
+                         {
+                            id: "m3",
+                            title: "📞 Atención al cliente",
+                        },
+                        {
+                            id: "m7",
+                            title: "📑 Mi estado de cuenta",
+                        },
+                        {
+                            id: "m8",
+                            title: "💧 Nuestro servicio",
+                        },
+                        {
+                            id: "m2",
+                            title: "💵 Lista de precios",
+                        }
+                    ]
+                }
+                ]
+            }
+        }
+
 async function metaNotify(params) {
  await axios({
         method: "POST",
@@ -94,6 +135,19 @@ async function metaNotify(params) {
            text: {
               body: "✅ Registro exitoso \n¡Bienvenido a Doctor Agua! Ya puedes realizar tus pedidos. \nPara más detalles, consulta el menú: Quiero hacer un pedido."
             }
+        },
+      });
+       await axios({
+        method: "POST",
+        url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          messaging_product: "whatsapp",
+          to: params.PhoneContact,
+          type: "interactive",
+           interactive: lista
         },
       });
   return "ok"
