@@ -303,6 +303,100 @@ router.get('/openchannel', async (req, res) => {
 
 })
 
+router.get('/recordatorio', async (req, res) => {
+ const params2 = {
+      TableName: dynamodbTableName,
+      KeyConditionExpression: 'pk = :hkey',
+      FilterExpression: 'Status = :f1key',
+        ExpressionAttributeValues: {
+          ':hkey': 'dragua#purchase',
+          ':f1key': 0,
+        }
+    };
+    await dynamodb.query(params2).promise().then(async response => {
+      let dtoscompra = response.Items
+      for (let index = 0; index < dtoscompra.length; index++) {
+      const element = dtoscompra[index];
+      if(element.AvisoIntento < 3){
+       await axios({
+        method: "POST",
+        url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          messaging_product: "whatsapp",
+          to: element.phoneContact,
+          type: "text",
+          text: {
+                body: `Tu pedido está listo para avanzar 🚚
+Solo falta confirmar el pago para procesarlo, recuerda enviar el capture o la foto del billete fisico.
+Gracias por confiar en Doctor Agua
+💧 Embotella tu salud`
+              }
+        },
+      });
+updateNotifyCobros(element)
+      }
+    }
+
+       res.status(200).send(dtoscliente)
+    }, error => {
+      console.error('error 164', error);
+      res.status(500).send(error);
+    })
+
+})
+
+async function updateNotifyCobros(params) {
+  if(params.AvisoIntento){
+ const params2 = {
+      TableName: dynamodbTableName,
+      Key: { pk : 'dragua#purchase', sk:  params.sk},
+      UpdateExpression: 'set #a = :x',
+      ExpressionAttributeNames: {'#a' : 'AvisoIntento'},
+      ExpressionAttributeValues: {
+        ':x': params.AvisoIntento + 1
+      }
+    };
+    await dynamodb.update(params2).promise().then(async() => {
+          const body = {
+            Operation: 'SAVE',
+            Message: 'SUCCESS',
+            Item: params
+          }
+          return body
+          
+        }, error => {
+          console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+          return error
+        })
+  }else{
+    const params2 = {
+      TableName: dynamodbTableName,
+      Key: { pk : 'dragua#purchase', sk:  params.sk},
+      UpdateExpression: 'set #a = :x',
+      ExpressionAttributeNames: {'#a' : 'AvisoIntento'},
+      ExpressionAttributeValues: {
+        ':x': 1
+      }
+    };
+    await dynamodb.update(params2).promise().then(async() => {
+          const body = {
+            Operation: 'SAVE',
+            Message: 'SUCCESS',
+            Item: params
+          }
+          return body
+          
+        }, error => {
+          console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+          return error
+        })
+  }
+
+}
+
 
 
 
