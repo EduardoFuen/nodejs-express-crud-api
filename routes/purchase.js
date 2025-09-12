@@ -417,7 +417,8 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
           },
         });
         }else if(dtoscompra.Ispickup == 0){
-        detalledeinforma = {
+          if(dtoscliente.longitude){
+          detalledeinforma = {
           longitude: dtoscliente.longitude,
           latitude: dtoscliente.latitude,
           name: "Delivery para "+dtoscliente.BusinessName,
@@ -436,7 +437,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
              location: detalledeinforma
           },
         });
-
+        
                 await axios({
           method: "POST",
           url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
@@ -493,6 +494,70 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
              }
           },
         });
+          }else{
+              await axios({
+          method: "POST",
+          url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            messaging_product: "whatsapp",
+            to: params.IDdely,
+            type: "text",
+             text: {
+                body: `${productosConFormatoAmigable}`
+              }
+          },
+        });
+         await axios({
+          method: "POST",
+          url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            messaging_product: "whatsapp",
+            to: params.IDdely,
+            type: "interactive",
+             interactive:{
+            type: `list`,
+            header: {
+              type: `text`,
+              text: `Delivery para: ${dtoscompra.BusinessName}`
+            },
+            body: {
+                text: `Codigo de pedido: ${dtoscompra.idrastreo}`
+            },
+            action:{
+                button: `Actualizar Pedido`,
+                sections: [
+                    {
+                        title: `Solicitar`,
+                        rows: [{
+                            id: `123solici:${dtoscompra.idrastreo}`,
+                            title: `🚚 Solicitar Ubicacion`,
+
+                        },{
+                            id: `123notify:${dtoscompra.idrastreo}`,
+                            title: `🚚 Notificar Salida`,
+
+                        },{
+                            id: `123llegada:${dtoscompra.idrastreo}`,
+                            title: `🚚 Notificar Llegada`,
+
+                        },
+                    ]
+                }
+                ]
+            }
+
+             }
+          },
+        });
+          }
+        
+
         }
        
       
