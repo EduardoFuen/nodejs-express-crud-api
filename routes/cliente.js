@@ -48,19 +48,24 @@ router.get('/all', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  let entrada = req.body
-  entrada.pk = 'dragua#client'
+   let entrada = req.body
+  if(entrada.rifempresa){
+    entrada.Code = entrada.rifempresa
+     entrada.Rif = entrada.rifempresa
+  }else{
   entrada.Code = entrada.Rif
+  }
+  entrada.pk = 'dragua#client'
   entrada.sk = Date.now().toString()
   const params = {
     TableName: dynamodbTableName,
-    Item: req.body
+    Item: entrada
   }
   await dynamodb.put(params).promise().then(() => {
     const body = {
       Operation: 'SAVE',
       Message: 'SUCCESS',
-      Item: req.body
+      Item: entrada
     }
     res.status(200).send(body)
     metaNotify(params.Item)
