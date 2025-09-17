@@ -13,10 +13,9 @@ router.post('/', async (req, res) => {
     console.log("peitcion")
     const params = {
         TableName: dynamodbTableName,
-        KeyConditionExpression: 'pk = :hkey',
-        FilterExpression: 'username = :userkey and password = :passkey',
+        IndexName: 'username-password-index',
+        KeyConditionExpression: 'username = :userkey and password = :passkey',
         ExpressionAttributeValues: {
-          ':hkey': 'dragua#user',
           ':userkey': req.body.email,
           ':passkey': req.body.password,
         }
