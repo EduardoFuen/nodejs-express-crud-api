@@ -53,8 +53,12 @@ router.post('/', async (req, res) => {
     entrada.Code = entrada.rifempresa
      entrada.Rif = entrada.rifempresa
   }else{
-  entrada.Code = entrada.Rif
+    entrada.Code = entrada.Rif
   }
+  if(!entrada.BusinessName){
+    entrada.BusinessName = entrada.Vendedor
+  }
+ 
   entrada.pk = 'dragua#client'
   entrada.sk = Date.now().toString()
   const params = {
