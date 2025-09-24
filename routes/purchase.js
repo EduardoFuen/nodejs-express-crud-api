@@ -515,8 +515,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
           detalledeinforma = {
           longitude: dtoscliente.longitude,
           latitude: dtoscliente.latitude,
-          name: "Delivery para "+dtoscliente.BusinessName,
-          address: "Telefono: "+dtoscompra.PhoneContact+ " Detalle a continuacion..."
+          name: "Delivery para "+dtoscliente.BusinessName
           }
              await axios({
           method: "POST",
