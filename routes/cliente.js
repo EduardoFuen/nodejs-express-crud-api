@@ -48,11 +48,12 @@ router.get('/all', async (req, res) => {
 })
 
 router.put('/', async (req, res) => {
+  let idclient = req.body.ID
   const params = {
     TableName: dynamodbTableName,
     Key: {
       'pk': 'dragua#client',
-      'sk': req.body.ID,
+      'sk': idclient.toString(),
     },
     UpdateExpression: `set DaysPayment = :value`,
     ExpressionAttributeValues: {
