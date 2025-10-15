@@ -176,6 +176,35 @@ router.post('/', async (req, res) => {
       })
 })
 
+router.post('/emergency', async (req, res) => {
+  if(req.body.Mensage.length > 3){
+await axios({
+          method: "POST",
+          url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            messaging_product: "whatsapp",
+            to: req.body.PhoneContact,
+            type: "text",
+             text: {
+                body: `${req.body.Mensage}`
+              }
+          },
+        });
+        const body = {
+            Operation: 'SAVE',
+            Message: 'SUCCESS',
+            Item: req.body
+          }
+          res.status(200).send(body) 
+  }else{
+    res.status(500).send("Mensaje Muy corto");
+  }
+         
+})
+
 router.put('/', async (req, res) => {
   const params2 = {
       TableName: dynamodbTableName,
