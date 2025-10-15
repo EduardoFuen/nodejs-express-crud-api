@@ -717,7 +717,7 @@ router.delete('/', async (req, res) => {
   const params = {
     TableName: dynamodbTableName,
     Key: {
-      'pk': 'dragua#purchase',
+      'pk': 'dragua#collection',
       'sk': `${id}`,
     },
     ReturnValues: 'ALL_OLD'
