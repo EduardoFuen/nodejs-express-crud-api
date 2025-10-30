@@ -46,6 +46,94 @@ router.get('/all', async (req, res) => {
   }
 })
 
+router.get('/emergency', async (req, res) => {
+  console.log("entro")
+  const params = {
+    TableName: dynamodbTableName,
+    KeyConditionExpression: 'pk = :hkey',
+    ExpressionAttributeValues: {
+    ':hkey': 'emergency'
+    }
+  }
+  try {
+    const allProducts = await scanDynamoRecords(params, []);
+    const body = {
+      products: allProducts
+    }
+    res.json(body);
+  } catch(error) {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+    res.status(500).send(error);
+  }
+})
+
+router.put('/emergency', async (req, res) => {
+   const params2 = {
+    TableName: dynamodbTableName,
+    KeyConditionExpression: 'pk = :hkey',
+    ExpressionAttributeValues: {
+      ':hkey': 'dragua#emergency'
+    }
+  };
+  await dynamodb.query(params2).promise().then(async response2 => {
+    if(response2.Items[0].active == 1){
+const params = {
+    TableName: dynamodbTableName,
+    Key: {
+      'pk': 'dragua#emergency',
+      'sk': '1761835072764',
+    },
+    UpdateExpression: `set Base = :value, active = :value2`,
+    ExpressionAttributeValues: {
+      ':value': req.body.Base,
+      ':value2': 0,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  }
+  await dynamodb.update(params).promise().then(response => {
+    const body = {
+      Operation: 'UPDATE',
+      Message: 'SUCCESS',
+      UpdatedAttributes: response
+    }
+    res.json(body);
+  }, error => {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+    res.status(500).send(error);
+  })
+    }else{
+      const params = {
+    TableName: dynamodbTableName,
+    Key: {
+      'pk': 'dragua#emergency',
+      'sk': '1761835072764',
+    },
+    UpdateExpression: `set Base = :value, active = :value2`,
+    ExpressionAttributeValues: {
+      ':value': req.body.Base,
+      ':value2': 1,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  }
+  await dynamodb.update(params).promise().then(response => {
+    const body = {
+      Operation: 'UPDATE',
+      Message: 'SUCCESS',
+      UpdatedAttributes: response
+    }
+    res.json(body);
+  }, error => {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+    res.status(500).send(error);
+  })
+    } 
+  }, error => {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+    res.status(500).send(error);
+  })
+  
+})
+
 router.post('/', async (req, res) => {
   let entrada = req.body
   entrada.pk = 'dragua#product'
