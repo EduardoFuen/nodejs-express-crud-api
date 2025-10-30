@@ -52,13 +52,13 @@ router.get('/emergency', async (req, res) => {
     TableName: dynamodbTableName,
     KeyConditionExpression: 'pk = :hkey',
     ExpressionAttributeValues: {
-    ':hkey': 'emergency'
+    ':hkey': 'dragua#emergency'
     }
   }
   try {
     const allProducts = await scanDynamoRecords(params, []);
     const body = {
-      products: allProducts
+      emergency: allProducts
     }
     res.json(body);
   } catch(error) {
