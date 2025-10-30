@@ -112,7 +112,11 @@ const params = {
       'pk': 'dragua#emergency',
       'sk': '1761835072764',
     },
-    UpdateExpression: `set Base = :value, active = :value2`,
+    UpdateExpression: `set #bs = :value, #ae = :value2`,
+      ExpressionAttributeNames: {
+        "#bs": "Base",
+      "#ae": "active",
+    },
     ExpressionAttributeValues: {
       ':value': req.body.Base,
       ':value2': 1,
