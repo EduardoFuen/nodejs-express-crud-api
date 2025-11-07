@@ -183,7 +183,7 @@ router.post('/smsdelivery', async (req, res) => {
       KeyConditionExpression: 'pk = :hkey and sk = :skey',
       ExpressionAttributeValues: {
         ':hkey': 'dragua#purchase',
-        ':skey': req.query.ID
+        ':skey': req.query.sk
       }
     };
     await dynamodb.query(params).promise().then(async response => {
