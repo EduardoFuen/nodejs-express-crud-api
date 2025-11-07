@@ -178,6 +178,8 @@ router.post('/', async (req, res) => {
 
 router.post('/smsdelivery', async (req, res) => {
   console.log(req.body)
+   let productoentrega = []
+   let detalledeinforma
   const params = {
       TableName: dynamodbTableName,
       KeyConditionExpression: 'pk = :hkey and sk = :skey',
@@ -194,6 +196,30 @@ router.post('/smsdelivery', async (req, res) => {
   let productosParaWsp = productoentrega.map(producto => `- ${producto.Cantidad}  ${producto.Producto}`);
   
   const productosConFormatoAmigable = productosParaWsp.join('\n');
+
+if(dtoscompra.longitude){
+          detalledeinforma = {
+          longitude: dtoscompra.longitude,
+          latitude: dtoscompra.latitude,
+          name: "Delivery para "+dtoscompra.BusinessName
+          }
+             await axios({
+          method: "POST",
+          url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            messaging_product: "whatsapp",
+            to: response.Items[0].phoneDelivery,
+            type: "location",
+             location: detalledeinforma
+          },
+        });
+}
+
+
+
        await axios({
           method: "POST",
           url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
