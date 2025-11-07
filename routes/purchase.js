@@ -301,10 +301,11 @@ router.put('/', async (req, res) => {
   const params2 = {
       TableName: dynamodbTableName,
       Key: { pk : 'dragua#purchase', sk:  req.body.sk},
-      UpdateExpression: 'set #a = :x',
-      ExpressionAttributeNames: {'#a' : 'Status'},
+      UpdateExpression: 'set #a = :x, #b = :y',
+      ExpressionAttributeNames: {'#a' : 'Status','#b' : 'phoneDelivery'},
       ExpressionAttributeValues: {
         ':x': 4,
+        ':y': req.body.IDdely
 
       }
     };
