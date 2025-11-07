@@ -177,6 +177,7 @@ router.post('/', async (req, res) => {
 })
 
 router.post('/smsdelivery', async (req, res) => {
+  console.log(req.body)
   const params = {
       TableName: dynamodbTableName,
       KeyConditionExpression: 'pk = :hkey and sk = :skey',
