@@ -503,6 +503,10 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
                     {
                         title: `Solicitar`,
                         rows: [{
+                            id: `123aceptar:${dtoscompra.idrastreo}`,
+                            title: `🚚 Aceptar Pedido`,
+
+                        },{
                             id: `123solici:${dtoscompra.idrastreo}`,
                             title: `🚚 Solicitar Ubicacion`,
 
@@ -600,6 +604,10 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
                     {
                         title: `Solicitar`,
                         rows: [{
+                            id: `123aceptar:${dtoscompra.idrastreo}`,
+                            title: `🚚 Aceptar Pedido`,
+
+                        },{
                             id: `123notify:${dtoscompra.idrastreo}`,
                             title: `🚚 Notificar Salida`,
 
@@ -657,6 +665,10 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
                     {
                         title: `Solicitar`,
                         rows: [{
+                            id: `123aceptar:${dtoscompra.idrastreo}`,
+                            title: `🚚 Aceptar Pedido`,
+
+                        },{
                             id: `123solici:${dtoscompra.idrastreo}`,
                             title: `🚚 Solicitar Ubicacion`,
 
