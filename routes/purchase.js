@@ -176,6 +176,98 @@ router.post('/', async (req, res) => {
       })
 })
 
+router.post('/smsdelivery', async (req, res) => {
+  const params = {
+      TableName: dynamodbTableName,
+      KeyConditionExpression: 'pk = :hkey and sk = :skey',
+      ExpressionAttributeValues: {
+        ':hkey': 'dragua#purchase',
+        ':skey': req.query.ID
+      }
+    };
+    await dynamodb.query(params).promise().then(async response => {
+      let dtoscompra = response.Items[0]
+        dtoscompra.Articles.forEach(element => {
+    productoentrega.push({Producto: element.ProductID, Cantidad: element.Count})
+  });
+  let productosParaWsp = productoentrega.map(producto => `- ${producto.Cantidad}  ${producto.Producto}`);
+  
+  const productosConFormatoAmigable = productosParaWsp.join('\n');
+       await axios({
+          method: "POST",
+          url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            messaging_product: "whatsapp",
+            to: response.Items[0].phoneDelivery,
+            type: "interactive",
+             interactive:{
+            type: `list`,
+            header: {
+              type: `text`,
+              text: `Envio de delivery`
+            },
+            body: {
+                text: `Codigo de pedido: ${response.Items[0].idrastreo}`
+            },
+            action:{
+                button: `Solicitar Ubicacion`,
+                sections: [
+                    {
+                        title: `Actualizar Pedido`,
+                        rows: [{
+                            id: `123aceptar:${response.Items[0].idrastreo}`,
+                            title: `🚚 Aceptar Pedido`,
+
+                        },{
+                            id: `123notify:${response.Items[0].idrastreo}`,
+                            title: `🚚 Notificar Salida`,
+
+                        },{
+                            id: `123llegada:${response.Items[0].idrastreo}`,
+                            title: `🚚 Notificar Llegada`,
+
+                        },
+                    ]
+                }
+                ]
+            }
+
+             }
+          },
+        });
+        await axios({
+          method: "POST",
+          url: `https://graph.facebook.com/v23.0/731086380087063/messages`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            messaging_product: "whatsapp",
+            to: response.Items[0].phoneDelivery,
+            type: "text",
+             text: {
+                body: `${productosConFormatoAmigable}`
+              }
+          },
+        });
+        const body = {
+            Operation: 'SAVE',
+            Message: 'SUCCESS',
+            Item: req.body
+          }
+          res.status(200).send(body)   
+    }, error => {
+      console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+      res.status(500).send(error);
+    })
+
+
+ 
+})
+
 router.post('/emergency', async (req, res) => {
   if(req.body.Mensage.length > 3){
 await axios({
@@ -212,7 +304,8 @@ router.put('/', async (req, res) => {
       UpdateExpression: 'set #a = :x',
       ExpressionAttributeNames: {'#a' : 'Status'},
       ExpressionAttributeValues: {
-        ':x': 4
+        ':x': 4,
+
       }
     };
     await dynamodb.update(params2).promise().then(async() => {
@@ -602,7 +695,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
                 button: `Actualizar Pedido`,
                 sections: [
                     {
-                        title: `Solicitar`,
+                        title: `Actualizar Pedido`,
                         rows: [{
                             id: `123aceptar:${dtoscompra.idrastreo}`,
                             title: `🚚 Aceptar Pedido`,
