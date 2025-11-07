@@ -212,7 +212,7 @@ router.put('/', async (req, res) => {
       UpdateExpression: 'set #a = :x',
       ExpressionAttributeNames: {'#a' : 'Status'},
       ExpressionAttributeValues: {
-        ':x': 1
+        ':x': 4
       }
     };
     await dynamodb.update(params2).promise().then(async() => {
