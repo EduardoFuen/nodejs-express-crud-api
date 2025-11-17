@@ -17,7 +17,8 @@ router.get('/', async (req, res) => {
     KeyConditionExpression: 'pk = :hkey',
     ExpressionAttributeValues: {
       ':hkey': 'dragua#purchase'
-    }
+    },
+    ScanIndexForward: false
   };
   await dynamodb.query(params).promise().then(response => {
     res.json(response.Items);
