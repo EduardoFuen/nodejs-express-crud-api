@@ -367,7 +367,7 @@ async function ObtenerDatosCompra(params) {
        const params2 = {
       TableName: dynamodbTableName,
       KeyConditionExpression: 'pk = :hkey',
-      FilterExpression: 'phoneContact = :userkey',
+      FilterExpression: 'PhoneContact = :userkey',
         ExpressionAttributeValues: {
           ':hkey': 'dragua#client',
           ':userkey': dtoscompra.PhoneContact,
@@ -584,7 +584,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
           },
           data: {
             messaging_product: "whatsapp",
-            to: dtoscliente.phoneContact,
+            to: dtoscliente.PhoneContact,
             type: "text",
              text: {
                 body: `✅ Pago confirmado
