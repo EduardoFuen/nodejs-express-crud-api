@@ -398,9 +398,10 @@ async function obtenerDatosDelivery(params) {
         ':fkey': params.IDdely
       }
     };
-
+console.log(params3)
     await dynamodb.query(params3).promise().then(async response3 => {
       let dtoscompra = response3.Items[0]
+      console.log(dtoscompra)
       return dtoscompra
     }, error => {
       console.error('error 169', error);
