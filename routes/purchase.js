@@ -330,12 +330,12 @@ router.put('/', async (req, res) => {
   const params2 = {
       TableName: dynamodbTableName,
       Key: { pk : 'dragua#purchase', sk:  req.body.sk},
-      UpdateExpression: 'set #a = :x, #b = :y',// #c = :z',
-      ExpressionAttributeNames: {'#a' : 'Status','#b' : 'phoneDelivery'},// '#c' : 'deliveryName'
+      UpdateExpression: 'set #a = :x, #b = :y, #c = :z',// #c = :z',
+      ExpressionAttributeNames: {'#a' : 'Status','#b' : 'phoneDelivery', '#c' : 'deliveryName'},// '#c' : 'deliveryName'
       ExpressionAttributeValues: {
         ':x': 4,
         ':y': req.body.IDdely,
-     //   ':z': datosDelivery.Name,
+        ':z': datosDelivery.Name,
       }
     };
     await dynamodb.update(params2).promise().then(async() => {
@@ -392,7 +392,7 @@ async function obtenerDatosDelivery(params) {
    const params3 = {
       TableName: dynamodbTableName,
       KeyConditionExpression: 'pk = :hkey',
-      FilterExpression:'PhoneContact = :fkey',
+      FilterExpression:'phoneContact = :fkey',
       ExpressionAttributeValues: {
         ':hkey': 'dragua#delivery',
         ':fkey': params.IDdely
