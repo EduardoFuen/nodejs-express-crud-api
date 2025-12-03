@@ -326,14 +326,16 @@ await axios({
 })
 
 router.put('/', async (req, res) => {
+  let datosDelivery = await obtenerDatosDelivery(req.body)
   const params2 = {
       TableName: dynamodbTableName,
       Key: { pk : 'dragua#purchase', sk:  req.body.sk},
-      UpdateExpression: 'set #a = :x, #b = :y',
-      ExpressionAttributeNames: {'#a' : 'Status','#b' : 'phoneDelivery'},
+      UpdateExpression: 'set #a = :x, #b = :y, #c = :z',
+      ExpressionAttributeNames: {'#a' : 'Status','#b' : 'phoneDelivery', '#c' : 'deliveryName'},
       ExpressionAttributeValues: {
         ':x': 4,
-        ':y': req.body.IDdely
+        ':y': req.body.IDdely,
+        ':z': datosDelivery.Name,
 
       }
     };
@@ -343,9 +345,8 @@ router.put('/', async (req, res) => {
             Message: 'SUCCESS',
             Item: req.body
           }
-          ObtenerDatosCompra(req.body)
+        
           res.status(200).send(body)
-          
         }, error => {
           console.error('Do your custom error handling here. I am just ganna log it out: ', error);
           res.status(500).send(error);
@@ -367,13 +368,12 @@ async function ObtenerDatosCompra(params) {
        const params2 = {
       TableName: dynamodbTableName,
       KeyConditionExpression: 'pk = :hkey',
-      FilterExpression: 'PhoneContact = :userkey',
+      FilterExpression: 'phoneContact = :userkey',
         ExpressionAttributeValues: {
           ':hkey': 'dragua#client',
           ':userkey': dtoscompra.PhoneContact,
         }
     };
-
     await dynamodb.query(params2).promise().then(response => {
       let dtoscliente = response.Items[0]
   
@@ -382,12 +382,30 @@ async function ObtenerDatosCompra(params) {
     }, error => {
       console.error('error 164', error);
       return error
-
     })
     }, error => {
       console.error('error 169', error);
       return error
+    })
+}
 
+async function obtenerDatosDelivery(params) {
+   const params3 = {
+      TableName: dynamodbTableName,
+      KeyConditionExpression: 'pk = :hkey',
+      FilterExpression:'PhoneContact = :fkey',
+      ExpressionAttributeValues: {
+        ':hkey': 'dragua#delivery',
+        ':fkey': params.IDdely
+      }
+    };
+
+    await dynamodb.query(params3).promise().then(async response3 => {
+      let dtoscompra = response3.Items[0]
+      return dtoscompra
+    }, error => {
+      console.error('error 169', error);
+      return error
     })
 }
 
