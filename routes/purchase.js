@@ -584,7 +584,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
           },
           data: {
             messaging_product: "whatsapp",
-            to: dtoscliente.PhoneContact,
+            to: dtoscliente.phoneContact,
             type: "text",
              text: {
                 body: `✅ Pago confirmado
