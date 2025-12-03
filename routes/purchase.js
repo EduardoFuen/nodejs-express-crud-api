@@ -327,6 +327,7 @@ await axios({
 
 router.put('/', async (req, res) => {
   let datosDelivery = await obtenerDatosDelivery(req.body)
+  console.log(datosDelivery)
   const params2 = {
       TableName: dynamodbTableName,
       Key: { pk : 'dragua#purchase', sk:  req.body.sk},
