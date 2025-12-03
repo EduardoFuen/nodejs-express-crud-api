@@ -344,7 +344,7 @@ router.put('/', async (req, res) => {
             Message: 'SUCCESS',
             Item: req.body
           }
-        
+        ObtenerDatosCompra(req.body)
           res.status(200).send(body)
         }, error => {
           console.error('Do your custom error handling here. I am just ganna log it out: ', error);
