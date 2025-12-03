@@ -326,16 +326,28 @@ await axios({
 })
 
 router.put('/', async (req, res) => {
-  let datosDelivery = await obtenerDatosDelivery(req.body)
+  
+const params3 = {
+      TableName: dynamodbTableName,
+      KeyConditionExpression: 'pk = :hkey',
+      FilterExpression:'phoneContact = :fkey',
+      ExpressionAttributeValues: {
+        ':hkey': 'dragua#delivery',
+        ':fkey': req.body.IDdely
+      }
+    };
+    await dynamodb.query(params3).promise().then(async response3 => {
+      let dtosdelivery = response3.Items[0]
+      
   const params2 = {
       TableName: dynamodbTableName,
       Key: { pk : 'dragua#purchase', sk:  req.body.sk},
-      UpdateExpression: 'set #a = :x, #b = :y',// #c = :z',
-      ExpressionAttributeNames: {'#a' : 'Status','#b' : 'phoneDelivery'},// '#c' : 'deliveryName'
+      UpdateExpression: 'set #a = :x, #b = :y, #c = :z',// #c = :z',
+      ExpressionAttributeNames: {'#a' : 'Status','#b' : 'phoneDelivery','#c' : 'deliveryName'},// '#c' : 'deliveryName'
       ExpressionAttributeValues: {
         ':x': 4,
         ':y': req.body.IDdely,
-     //   ':z': datosDelivery.Name,
+        ':z': dtosdelivery.Name
       }
     };
     await dynamodb.update(params2).promise().then(async() => {
@@ -350,6 +362,13 @@ router.put('/', async (req, res) => {
           console.error('Do your custom error handling here. I am just ganna log it out: ', error);
           res.status(500).send(error);
         })
+
+    }, error => {
+      console.error('error 169', error);
+      return error
+    })
+
+
 })
 
 async function ObtenerDatosCompra(params) {
@@ -399,9 +418,9 @@ async function obtenerDatosDelivery(params) {
       }
     };
 console.log(params3)
-    await dynamodb.query(params3).promise().then(async response3 => {
+    await dynamodb.query(params3).promise().then(response3 => {
       let dtoscompra = response3.Items[0]
-      console.log(dtoscompra)
+
       return dtoscompra
     }, error => {
       console.error('error 169', error);
