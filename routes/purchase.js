@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
       ':hkey': 'dragua#purchase'
     },
     ScanIndexForward: false,
-    Limit: 500
+    Limit: 100
   };
   await dynamodb.query(params).promise().then(response => {
     res.json(response.Items);
