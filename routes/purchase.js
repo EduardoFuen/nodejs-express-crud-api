@@ -753,7 +753,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
             type: `list`,
             header: {
               type: `text`,
-              text: `Delivery para: ${dtoscompra.BusinessName}`
+              text: `Delivery para: ${dtoscompra.BusinessName}, TLF: ${dtoscompra.PhoneContact}`
             },
             body: {
                 text: `Codigo de pedido: ${dtoscompra.idrastreo}`
@@ -814,7 +814,7 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
             type: `list`,
             header: {
               type: `text`,
-              text: `Delivery para: ${dtoscompra.BusinessName}`
+              text: `Delivery para: ${dtoscompra.BusinessName}, TLF: ${dtoscompra.PhoneContact}`
             },
             body: {
                 text: `Codigo de pedido: ${dtoscompra.idrastreo}`
