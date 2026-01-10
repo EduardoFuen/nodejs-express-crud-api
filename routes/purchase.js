@@ -159,15 +159,16 @@ router.post('/', async (req, res) => {
         entrada.Rif = response2.Items[0].Rif
         entrada.EmailContact = response2.Items[0].EmailContact
 
-        if(req.body.proviene){
+        if(entrada.proviene == 'sistema'){
           entrada.MontoBCV = (req.body.Total * parseInt(req.body.dolar)).toFixed(2)
           entrada.Status = 5
           entrada.deliveryName = "SISTEMA"
-          entrada.Total = entrada.SubTotal.toFixed(2)
-           entrada.Price = entrada.BasePrice
-          entrada.BasePrice = entrada.BasePrice
-          entrada.Sku = entrada.ProductID
-
+          for (let index = 0; index < entrada.Articles.length; index++) {
+            entrada.Articles[index].Sku = entrada.Articles[index].ProductID
+            entrada.Articles[index].Price = entrada.Articles[index].BasePrice
+          }
+            entrada.Total = entrada.SubTotal.toFixed(2)
+            
         }
  
         const params = {
