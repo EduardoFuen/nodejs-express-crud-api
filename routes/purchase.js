@@ -161,7 +161,7 @@ router.post('/', async (req, res) => {
 
         if(req.body.proviene){
           entrada.MontoBCV = (req.body.Total * parseInt(req.body.dolar)).toFixed(2)
-          entrada.Status = 1
+          entrada.Status = 5
           entrada.deliveryName = "SISTEMA"
         }
  
