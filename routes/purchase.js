@@ -158,6 +158,12 @@ router.post('/', async (req, res) => {
         entrada.BusinessName = response2.Items[0].BusinessName
         entrada.Rif = response2.Items[0].Rif
         entrada.EmailContact = response2.Items[0].EmailContact
+
+        if(req.body.proviene){
+          entrada.MontoBCV = (req.body.Total * parseInt(req.body.dolar)).toFixed(2)
+          entrada.Status = 1
+          entrada.deliveryName = "SISTEMA"
+        }
  
         const params = {
           TableName: dynamodbTableName,
