@@ -166,6 +166,9 @@ router.post('/', async (req, res) => {
           for (let index = 0; index < entrada.Articles.length; index++) {
             entrada.Articles[index].Sku = entrada.Articles[index].ProductID
             entrada.Articles[index].Price = entrada.Articles[index].BasePrice
+            entrada.Articles[index].BasePrice = entrada.Articles[index].BasePrice.toString()
+            entrada.Articles[index].SubTotal = entrada.Articles[index].SubTotal.toString()
+            entrada.Articles[index].Total = entrada.Articles[index].Total.toString()
           }
             entrada.Total = entrada.SubTotal.toFixed(2)
             
