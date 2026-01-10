@@ -163,6 +163,8 @@ router.post('/', async (req, res) => {
           entrada.MontoBCV = (req.body.Total * parseInt(req.body.dolar)).toFixed(2)
           entrada.Status = 5
           entrada.deliveryName = "SISTEMA"
+          entrada.Total = entrada.SubTotal.toFixed(2)
+
         }
  
         const params = {
