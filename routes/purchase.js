@@ -164,6 +164,9 @@ router.post('/', async (req, res) => {
           entrada.Status = 5
           entrada.deliveryName = "SISTEMA"
           entrada.Total = entrada.SubTotal.toFixed(2)
+          entrada.BasePrice = entrada.BasePrice.toString()
+          entrada.Sku = entrada.ProductID
+          entrada.Price = entrada.BasePrice
 
         }
  
