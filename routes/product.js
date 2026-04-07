@@ -164,16 +164,36 @@ router.post('/', async (req, res) => {
 })
 
 router.patch('/', async (req, res) => {
+  const { pk, sk, ...updateData } = req.body;
+
+  if (!pk || !sk) {
+    return res.status(400).send({ Message: 'pk and sk are required' });
+  }
+
+  let updateExpression = 'set';
+  let expressionAttributeNames = {};
+  let expressionAttributeValues = {};
+
+  const keys = Object.keys(updateData);
+  if (keys.length === 0) {
+    return res.status(400).send({ Message: 'No segments to update' });
+  }
+
+  keys.forEach((key, index) => {
+    updateExpression += ` #${key} = :value${index}${index < keys.length - 1 ? ',' : ''}`;
+    expressionAttributeNames[`#${key}`] = key;
+    expressionAttributeValues[`:value${index}`] = updateData[key];
+  });
+
   const params = {
     TableName: dynamodbTableName,
     Key: {
-      'pk': req.body.pk,
-      'sk': req.body.sk,
+      'pk': pk,
+      'sk': sk,
     },
-    UpdateExpression: `set ${req.body.updateKey} = :value`,
-    ExpressionAttributeValues: {
-      ':value': req.body.updateValue
-    },
+    UpdateExpression: updateExpression,
+    ExpressionAttributeNames: expressionAttributeNames,
+    ExpressionAttributeValues: expressionAttributeValues,
     ReturnValues: 'UPDATED_NEW'
   }
   await dynamodb.update(params).promise().then(response => {
@@ -287,17 +307,36 @@ router.put('/store', async (req, res) => {
 })
 
 router.put('/', async (req, res) => {
-  let nuevovalor = req.body.Price
+  const { ID, pk, sk, ...updateData } = req.body;
+
+  if (!ID) {
+    return res.status(400).send({ Message: 'ID is required' });
+  }
+
+  let updateExpression = 'set';
+  let expressionAttributeNames = {};
+  let expressionAttributeValues = {};
+
+  const keys = Object.keys(updateData);
+  if (keys.length === 0) {
+    return res.status(400).send({ Message: 'No data to update' });
+  }
+
+  keys.forEach((key, index) => {
+    updateExpression += ` #${key} = :value${index}${index < keys.length - 1 ? ',' : ''}`;
+    expressionAttributeNames[`#${key}`] = key;
+    expressionAttributeValues[`:value${index}`] = updateData[key];
+  });
+
   const params = {
     TableName: dynamodbTableName,
     Key: {
       'pk': 'dragua#product',
-      'sk': req.body.ID,
+      'sk': ID.toString(),
     },
-    UpdateExpression: `set Price = :value`,
-    ExpressionAttributeValues: {
-      ':value': nuevovalor
-    },
+    UpdateExpression: updateExpression,
+    ExpressionAttributeNames: expressionAttributeNames,
+    ExpressionAttributeValues: expressionAttributeValues,
     ReturnValues: 'UPDATED_NEW'
   }
   await dynamodb.update(params).promise().then(response => {

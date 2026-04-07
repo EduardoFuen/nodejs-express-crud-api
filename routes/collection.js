@@ -42,6 +42,53 @@ router.get('/delivery', async (req, res) => {
   })
 })
 
+router.put('/delivery', async (req, res) => {
+  const { ID, pk, sk, ...updateData } = req.body;
+
+  if (!ID) {
+    return res.status(400).send({ Message: 'ID is required' });
+  }
+
+  let updateExpression = 'set';
+  let expressionAttributeNames = {};
+  let expressionAttributeValues = {};
+
+  const keys = Object.keys(updateData);
+  if (keys.length === 0) {
+    return res.status(400).send({ Message: 'No data to update' });
+  }
+
+  keys.forEach((key, index) => {
+    updateExpression += ` #${key} = :value${index}${index < keys.length - 1 ? ',' : ''}`;
+    expressionAttributeNames[`#${key}`] = key;
+    expressionAttributeValues[`:value${index}`] = updateData[key];
+  });
+
+  const params = {
+    TableName: dynamodbTableName,
+    Key: {
+      'pk': 'dragua#delivery',
+      'sk': ID.toString(),
+    },
+    UpdateExpression: updateExpression,
+    ExpressionAttributeNames: expressionAttributeNames,
+    ExpressionAttributeValues: expressionAttributeValues,
+    ReturnValues: 'UPDATED_NEW'
+  }
+
+  await dynamodb.update(params).promise().then(response => {
+    const body = {
+      Operation: 'UPDATE',
+      Message: 'SUCCESS',
+      UpdatedAttributes: response
+    }
+    res.json(body);
+  }, error => {
+    console.error('Do your custom error handling here. I am just ganna log it out: ', error);
+    res.status(500).send(error);
+  })
+})
+
 router.post('/delivery', async (req, res) => {
   let entrada = req.body
   entrada.pk = 'dragua#delivery'
@@ -687,16 +734,36 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
 }
 
 router.patch('/', async (req, res) => {
+  const { pk, sk, ...updateData } = req.body;
+
+  if (!pk || !sk) {
+    return res.status(400).send({ Message: 'pk and sk are required' });
+  }
+
+  let updateExpression = 'set';
+  let expressionAttributeNames = {};
+  let expressionAttributeValues = {};
+
+  const keys = Object.keys(updateData);
+  if (keys.length === 0) {
+    return res.status(400).send({ Message: 'No data to update' });
+  }
+
+  keys.forEach((key, index) => {
+    updateExpression += ` #${key} = :value${index}${index < keys.length - 1 ? ',' : ''}`;
+    expressionAttributeNames[`#${key}`] = key;
+    expressionAttributeValues[`:value${index}`] = updateData[key];
+  });
+
   const params = {
     TableName: dynamodbTableName,
     Key: {
-      'pk': req.body.pk,
-      'sk': req.body.sk,
+      'pk': pk,
+      'sk': sk,
     },
-    UpdateExpression: `set ${req.body.updateKey} = :value`,
-    ExpressionAttributeValues: {
-      ':value': req.body.updateValue
-    },
+    UpdateExpression: updateExpression,
+    ExpressionAttributeNames: expressionAttributeNames,
+    ExpressionAttributeValues: expressionAttributeValues,
     ReturnValues: 'UPDATED_NEW'
   }
   await dynamodb.update(params).promise().then(response => {

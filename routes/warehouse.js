@@ -71,19 +71,36 @@ router.post('/', async (req, res) => {
 })
 
 router.patch('/', async (req, res) => {
-     let entrada = req.body
-    entrada.pk = 'warehouse'
-    entrada.sk = Date.now()
+  const { pk, sk, ...updateData } = req.body;
+
+  // Use values from body or defaults if not provided
+  const targetPk = pk || 'warehouse';
+  const targetSk = sk || Date.now().toString();
+
+  let updateExpression = 'set';
+  let expressionAttributeNames = {};
+  let expressionAttributeValues = {};
+
+  const keys = Object.keys(updateData);
+  if (keys.length === 0) {
+    return res.status(400).send({ Message: 'No data to update' });
+  }
+
+  keys.forEach((key, index) => {
+    updateExpression += ` #${key} = :value${index}${index < keys.length - 1 ? ',' : ''}`;
+    expressionAttributeNames[`#${key}`] = key;
+    expressionAttributeValues[`:value${index}`] = updateData[key];
+  });
+
   const params = {
     TableName: dynamodbTableName,
     Key: {
-      'pk': entrada.pk,
-      'sk': entrada.sk,
+      'pk': targetPk,
+      'sk': targetSk,
     },
-    UpdateExpression: `set ${entrada.updateKey} = :value`,
-    ExpressionAttributeValues: {
-      ':value': entrada.updateValue
-    },
+    UpdateExpression: updateExpression,
+    ExpressionAttributeNames: expressionAttributeNames,
+    ExpressionAttributeValues: expressionAttributeValues,
     ReturnValues: 'UPDATED_NEW'
   }
   await dynamodb.update(params).promise().then(response => {
