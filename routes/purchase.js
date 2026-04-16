@@ -714,7 +714,8 @@ async function NotifyRegistro(params,dtoscompra,dtoscliente) {
               text: `Delivery para: ${dtoscompra.NameTercero}`
             },
             body: {
-                text: `Codigo de pedido: ${dtoscompra.idrastreo}`
+                text: `Codigo de pedido: ${dtoscompra.idrastreo}\n\n
+                Telefono del Cliente: ${dtoscompra.TelefonoTercero}`
             },
             footer:{
               text: `Direccion: ${dtoscompra.DireccionTercero}`
